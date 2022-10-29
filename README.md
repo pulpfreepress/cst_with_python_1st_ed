@@ -1,2 +1,2 @@
-# psd_with_python_1st_ed
-Practical Software Development with Python Book Source Code Examples
+# Computer Scripting Techniques with Python, 1st Edition
+Computer Scripting Techniques  with Python Book Source Code Examples
