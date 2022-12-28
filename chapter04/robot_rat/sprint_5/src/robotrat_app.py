@@ -136,31 +136,45 @@ class RobotRatApp():
             case self.PenPositions.UP:
                 match(self._direction):
                     case self.Directions.NORTH:
-                        self._current_row -= 1
+                        self._current_row -= spaces_to_move
                         if self._current_row < 0:
                             self._current_row = 0
                     case self.Directions.EAST:
-                        self._current_col += 1
+                        self._current_col += spaces_to_move
                         if self._current_col > (self._cols - 1):
                             self._current_col = (self._cols - 1)
                     case self.Directions.SOUTH:
-                        self._current_row += 1
+                        self._current_row += spaces_to_move
                         if self._current_row > (self._rows - 1):
                             self._current_row = (self._rows - 1)
                     case self.Directions.WEST:
-                        self._current_col -= 1
+                        self._current_col -= spaces_to_move
                         if self._current_col < 0:
                             self._current_col = 0
             case self.PenPositions.DOWN:
                 match(self._direction):
                     case self.Directions.NORTH:
-                        pass
+                        while (self._current_row > 0) and (spaces_to_move > 0):
+                            self._current_row -= 1
+                            self._floor[self._current_row ][self._current_col] = True
+                            spaces_to_move -= 1
                     case self.Directions.EAST:
-                        pass
+                         while (self._current_col < self._cols) and (spaces_to_move > 0):
+                            self._current_col += 1
+                            self._floor[self._current_row ][self._current_col] = True
+                            spaces_to_move -= 1
                     case self.Directions.SOUTH:
-                        pass
+                        while (self._current_row < self._rows) and (spaces_to_move > 0):
+                            self._current_row += 1
+                            self._floor[self._current_row ][self._current_col] = True
+                            spaces_to_move -= 1
                     case self.Directions.WEST:
-                        pass
+                        while (self._current_col > 0) and (spaces_to_move > 0):
+                            self._current_col -= 1
+                            self._floor[self._current_row ][self._current_col] = True
+                            spaces_to_move -= 1
+       
+        print(f'Robot Rat at [{self._current_row}][{self._current_col}] facing {self._direction} {self._pen_position}')
         
 
 

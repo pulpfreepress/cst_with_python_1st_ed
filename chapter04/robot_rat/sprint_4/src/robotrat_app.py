@@ -14,7 +14,7 @@ class RobotRatApp():
     _EXIT='7'
 
     def __init__(self, rows, cols):
-       """Initialize RobotRatApp object"""
+       """Initialize RobotRatApp object."""
        self._rows = rows
        self._cols = cols
        self._floor = [[ False for i in range(rows)] for j in range(cols)]
