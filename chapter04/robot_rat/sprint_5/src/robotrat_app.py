@@ -150,7 +150,7 @@ class RobotRatApp():
 			case self.PenPositions.DOWN:
 				match(self._direction):
 					case self.Directions.NORTH:
-						while (self._current_row > 0) and (spaces_to_move > 0):
+						while (self._current_row > -1) and (spaces_to_move > 0):
 							self._floor[self._current_row][self._current_col] = True
 							if self._current_row > 0:
 								self._current_row -= 1
@@ -174,7 +174,7 @@ class RobotRatApp():
 								break
 							spaces_to_move -= 1
 					case self.Directions.WEST:
-						while (self._current_col > 0) and (spaces_to_move > 0):
+						while (self._current_col > -1) and (spaces_to_move > 0):
 							self._floor[self._current_row][self._current_col] = True
 							if self._current_col > 0:
 								self._current_col -= 1
