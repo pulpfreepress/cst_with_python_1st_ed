@@ -6,8 +6,10 @@ Student: Rick Miller
 Class: IT-566: Computer Scripting Techniques
 """
 
+import os
 import sys
 from enum import Enum
+from subprocess import call
 
 class RobotRatApp():
 	"""A Remote-Controlled Robot Rat Application."""
@@ -132,9 +134,9 @@ class RobotRatApp():
 
 	def move_forward(self):
 		""" Moves Robot Rat forward by indicated number of spaces.
-		    If the pen is UP the Robot Rat does not leave a mark on
-		    the floor. If the pen is DOWN the Robot Rat leaves a mark
-		    on the floor.
+			If the pen is UP the Robot Rat does not leave a mark on
+			the floor. If the pen is DOWN the Robot Rat leaves a mark
+			on the floor.
 		"""
 		if __debug__:
 			print('move_forward() method called...')
@@ -199,7 +201,7 @@ class RobotRatApp():
 								break
 							spaces_to_move -= 1
 
-		
+
 	def print_floor(self):
 		""" Prints the floor pattern."""
 		if __debug__:
@@ -214,7 +216,7 @@ class RobotRatApp():
 				else:
 					print('0 ', end='')
 
-				
+
 
 			print()
 
@@ -233,7 +235,11 @@ facing {self._direction} {self._pen_position}')
 		input('Press any key to continue... ')
 
 	def clear_screen(self):
-		print('\033c', end=None)
+		match(os.name):
+			case 'posix': 
+				os.system('clear')
+			case 'nt':
+				os.system('cls')
 
 	def start_application(self):
 		"""Start application processing loop."""
