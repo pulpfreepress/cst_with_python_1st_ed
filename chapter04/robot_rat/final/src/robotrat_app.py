@@ -9,7 +9,6 @@ Class: IT-566: Computer Scripting Techniques
 import os
 import sys
 from enum import Enum
-from subprocess import call
 
 class RobotRatApp():
 	"""A Remote-Controlled Robot Rat Application."""
@@ -42,7 +41,7 @@ class RobotRatApp():
 		"""Initialize RobotRatApp object."""
 		self._rows = rows
 		self._cols = cols
-		self._floor = [[False for i in range(rows)] for j in range(cols)]
+		self._floor = [[False for i in range(cols)] for j in range(rows)]
 		self._pen_position = self.PenPositions.UP
 		self._direction = self.Directions.EAST
 		self._current_row = 0
@@ -63,11 +62,19 @@ class RobotRatApp():
 
 	def process_menu_choice(self):
 		"""Process menu commands."""
-		# Prompt user for input
-		# Assign input string to variable
-		user_input = input('\n\tEnter Command Number: ')
-		# Use first character of input as menu choice
-		menu_choice = user_input[0]
+		# Declare variable to hold user input
+		user_input = self._PRINT_FLOOR
+		# Declare variable to hold converted menu choice
+		menu_choice = self._PRINT_FLOOR
+		try:
+			# Prompt user for input
+			user_input = input('\n\tEnter Command Number: ')
+			# Use first character from input string
+			menu_choice = user_input[0]
+		except:
+			# If there's a problem just print the floor
+			menu_choice = self._PRINT_FLOOR
+		
 		if __debug__:
 			print(f'You entered command number: {menu_choice}')
 		# Is menu_choice valid command?
@@ -216,8 +223,6 @@ class RobotRatApp():
 				else:
 					print('0 ', end='')
 
-
-
 			print()
 
 
@@ -225,7 +230,6 @@ class RobotRatApp():
 		"""Displays Robot Rat current position, direction, and pen position."""
 		print(f'\n\tRobot Rat at [{self._current_row}][{self._current_col}] \
 facing {self._direction} {self._pen_position}')
-
 
 	def print_error_message(self, menu_choice):
 		"""Warns of an invalid command entry."""

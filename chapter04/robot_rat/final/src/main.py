@@ -7,9 +7,15 @@ Class: IT-566: Computer Scripting Techniques
 """
 
 from robotrat_app import RobotRatApp
+import argparse
 
 def main():
-    robot_rat_app = RobotRatApp(20, 20)
+    parser = argparse.ArgumentParser(description='Set floor dimensions \
+from command-line.')
+    parser.add_argument('rows', metavar='N', type=int, help='Number of rows')
+    parser.add_argument('cols', metavar='N', type=int, help='Number of columns')
+    args = parser.parse_args()
+    robot_rat_app = RobotRatApp(args.rows, args.cols)
     robot_rat_app.start_application()
 
 

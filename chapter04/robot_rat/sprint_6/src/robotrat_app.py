@@ -40,7 +40,7 @@ class RobotRatApp():
 		"""Initialize RobotRatApp object."""
 		self._rows = rows
 		self._cols = cols
-		self._floor = [[False for i in range(rows)] for j in range(cols)]
+		self._floor = [[False for i in range(cols)] for j in range(rows)]
 		self._pen_position = self.PenPositions.UP
 		self._direction = self.Directions.EAST
 		self._current_row = 0
