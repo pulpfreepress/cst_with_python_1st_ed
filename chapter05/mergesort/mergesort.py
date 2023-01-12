@@ -78,14 +78,17 @@ class MergeSort():
 def main():
 	sys.setrecursionlimit(1500)
 	unsorted_ints = [random.randint(0, 10000) for _ in range(20000)]
-	print(unsorted_ints)
-	input('Press any key to continue...')
+	if __debug__:
+		print(unsorted_ints)
+		input('Press any key to continue...')
 	ms = MergeSort()
+	print(f'MergeSorting {len(unsorted_ints)} randomly-generated integers. This won\'t take long...')
 	t_start = time.perf_counter()
 	sorted_ints = ms.split(unsorted_ints, 0, len(unsorted_ints)-1)
 	t_stop = time.perf_counter()
-	print(sorted_ints)
-	print(f'Total sort time for {len(unsorted_ints)} integers is {t_stop - t_start:0.4f}')
+	if __debug__:
+		print(sorted_ints)
+	print(f'Total sort time for {len(unsorted_ints)} integers is {t_stop - t_start:0.4f} seconds.')
 
 
 if __name__ == '__main__':
