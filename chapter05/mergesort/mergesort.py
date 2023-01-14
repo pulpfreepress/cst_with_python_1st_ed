@@ -1,4 +1,4 @@
-"""Implements mergesort algorithm."""
+"""Implements merge sort algorithm."""
 
 import time
 import random
@@ -104,7 +104,8 @@ Hold my beer...this won\'t take long.')
 	sort_time = t_stop - t_start
 	if __debug__:
 		print(sorted_ints)
-	print(f'Sort time for {len(unsorted_ints):,} integers: {sort_time:0.8f} seconds.')
+	print(f'Sort time for {len(unsorted_ints):,} integers: \
+{sort_time:0.8f} seconds.')
 
 
 if __name__ == '__main__':
