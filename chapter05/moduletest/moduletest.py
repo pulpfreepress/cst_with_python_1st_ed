@@ -8,6 +8,11 @@ class ModuleTest():
 	def say_hi(self):
 		print('Hello World!')
 		print(f'My module __name__ is \'{__name__}\'')
+		var_one = 1
+		var_two = 2
+		sum = var_one + var_two
+		print(f'{sum}')
+		print()
 
 	
 def main():

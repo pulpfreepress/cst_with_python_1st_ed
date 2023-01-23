@@ -1,0 +1,4 @@
+Hello World!
+My module __name__ is 'moduletest'
+3
+
