@@ -1,0 +1,1 @@
+A sample text file to populate the docs directory. Can be removed when actual document files and folders are added to the docs directory.
