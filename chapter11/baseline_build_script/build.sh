@@ -16,8 +16,8 @@ check_tools() {
 	for tool in $TOOLS
 	do
 		command -v $tool &> /dev/null && \
-		([ $_confirm -eq 1 ] && \
-		echo "$tool: OK" || true) || (echo "$tool: MISSING"; exit 1);
+		([ $_confirm -eq 1 ] && echo "$tool: OK" || true) || \
+		(echo "$tool: MISSING"; exit 1);
 	done
 }
 
@@ -29,14 +29,14 @@ display_usage() {
 	echo "                --docstrings ] "
 	echo 
 	echo " Examples: "
-	echo "   ./`basename $0`                # Default: --checktools and --help"
+	echo "   $0                # Default: --checktools and --help"
 	echo "   ./`basename $0` --checktools   # Check for required tools"
 	echo "   ./`basename $0` --help         # Show this message"
 	echo "   ./`basename $0` --install      # pipenv install && install --dev"
 	echo "   ./`basename $0` --runmain      # pipenv run python3 $SRC_DIR/main.py"
 	echo "   ./`basename $0` --runtests     # pipenv run pytest $TESTS_DIR/"
 	echo "   ./`basename $0` --docstrings   # pipenv run pydocstyle $SRC_DIR/"
-	echo
+	echo " -- $0 -- "
 }
 
 default_action() {
