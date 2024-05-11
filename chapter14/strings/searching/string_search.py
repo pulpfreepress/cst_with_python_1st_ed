@@ -27,7 +27,11 @@ def main():
 
 	# At what index position does substring begin
 	# Start searching at index position n
-	print(f'The next occurence of \"friendship\" begins at index {s.find("friendship",5)}')
+	print(f'The next occurence of \"friendship\" begins at index \
+	   {s.find("friendship",5)}')
+
+	# Count the occurrences of the word friendship
+	print(f'The word \"friendship\" appears {s.count("friendship")} times.')
 
 
 if __name__ == '__main__':
