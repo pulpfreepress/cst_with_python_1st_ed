@@ -1,0 +1,26 @@
+{
+	"it566": {
+		"campus": "Balston Center",
+		"classroom": "4004",
+		"dates": {
+			"begin": "2024-08-26T00:00:00",
+			"end": "2024-12-07T00:00:00"
+		},
+		"semester": "Fall",
+		"students": [
+			{
+				"firstName": "Kateryna",
+				"lastName": "Nesvit"
+			},
+			{
+				"firstName": "Sapna",
+				"lastName": "Surana"
+			},
+			{
+				"firstName": "Jose",
+				"lastName": "Pi"
+			}
+		],
+		"year": 2024
+	}
+}

@@ -3,8 +3,10 @@
 def main():
 	# Print hash values of strings
 	keyOne = "a"
-	print(f'keyOne.__hash__() == {keyOne.__hash__()}')
-	print(f'keyOne.__hash__() == {keyOne.__hash__()}')
+	print(f'     keyOne.__hash__() == {keyOne.__hash__()}')
+	print(f'        "a".__hash__() == {"a".__hash__()}')
+	print(f'       "aa".__hash__() == {"aa".__hash__()}')
+	print(f'("a" + "a").__hash__() == {("a" + "a").__hash__()}')
 
 	# Create an empty dictionary with braces
 	my_dict = {}
