@@ -2,26 +2,73 @@
 
 import os
 
-tag_types = {}
-tag_types[1] = ('Unsigned Byte')
-tag_types[2] = ('ASCII String')
-tag_types[3] = ('Unsigned Short')
-tag_types[4] = ('Unsigned Long')
-tag_types[5] = ('Unsigned Rational')
-tag_types[6] = ('Signed Byte')
-tag_types[7] = ('Undefined')
-tag_types[8] = ('Signed Short')
-tag_types[9] = ('Signed Long')
-tag_types[10] = ('Signed Rational')
-tag_types[11] = ('Single')
-tag_types[6] = ('Double')
 
-tags = {}
-tags['010f'] = 'Make'
-tags['0110'] = 'Model'
 
 
 def main():
+
+	tag_types = {}
+	tag_types[1] = ('Unsigned Byte')
+	tag_types[2] = ('ASCII String')
+	tag_types[3] = ('Unsigned Short')
+	tag_types[4] = ('Unsigned Long')
+	tag_types[5] = ('Unsigned Rational')
+	tag_types[6] = ('Signed Byte')
+	tag_types[7] = ('Undefined')
+	tag_types[8] = ('Signed Short')
+	tag_types[9] = ('Signed Long')
+	tag_types[10] = ('Signed Rational')
+	tag_types[11] = ('Single')
+	tag_types[6] = ('Double')
+
+
+	# Tag Constants
+	make_key = '010f'
+	model_key = '0110'
+	orientation_key = '0112'
+	x_resolution_key = '011a'
+	y_resolution_key = '011b'
+	resolution_unit_key = '0128'
+	software_key = '0131'
+	datetime_key = '0132'
+	artist_key = '013b'
+	ycbcrpositioning_key = '0213'
+	copyright_key = '8298'
+	exif_offset_key = '8769'
+	gps_info_key = '8825'
+
+	tags = {}
+	tags[make_key] = 'Make'
+	tags[model_key] = 'Model'
+	tags[orientation_key] = 'Orientation'
+	tags[x_resolution_key] = 'X-Resolution'
+	tags[y_resolution_key] = 'Y-Resolution'
+	tags[resolution_unit_key] = 'Resolution Unit'
+	tags[software_key] = 'Software'
+	tags[datetime_key] = 'DateTime'
+	tags[artist_key] = 'Artist'
+	tags[ycbcrpositioning_key] = 'YCbCrPositioning'
+	tags[copyright_key] = 'Copyright'
+	tags[exif_offset_key] = 'EXIF Offset'
+	tags[gps_info_key] = 'GPS Info'
+
+
+
+	orientation = {}
+	orientation[1] = 'Horizontal (Normal)'
+	orientation[2] = 'Horizontal Mirrored'
+	orientation[3] = 'Rotated 180 Degrees'
+	orientation[4] = 'Vertical Mirrored'
+	orientation[5] = 'Horizontal Mirrored then Rotated 190 Degrees CCW'
+	orientation[6] = 'Rotated 90 Degrees CW'
+	orientation[7] = 'Horizontal Mirrored then Rotated 90 Degrees CW'
+	orientation[8] = 'Rotated 90 Degrees CCW'
+
+
+	resolution_unit = {}
+	resolution_unit[1] = 'Not Absolute'
+	resolution_unit[2] = 'Pixels/Inch'
+	resolution_unit[3] = 'Pixels/Centimeter'
 
 	# JPEG Constants
 	jpeg_soi = b'\xFF\xD8'
@@ -40,7 +87,7 @@ def main():
 
 
 		#filename = input('Enter Image Filename: ')
-		filename = 'Flowers.jpg'
+		filename = input('Image Filename: ')
 
 		with open(os.path.join(image_dir_path, filename), 'rb') as f:
 			content = f.read()
@@ -83,20 +130,20 @@ def main():
 				if data_length > 4:
 					f.seek(first_endian_byte_offset + data_or_offset)
 					print(f'Data: {f.read(data_length)}')
+				
+				if data_length == 1:
+					match tag_hex:
+						case '0112':
+							print(f'Data: {orientation[data_or_offset]}')
+						case '0128':
+							print(f'Data: {resolution_unit[data_or_offset]}')
+						case _: continue
+
 				f.seek(last_position)
+						
+				
 					
 				
-			
-
-
-
-			
-			
-			
-			
-
-
-
 	except (OSError, Exception) as e:
 		print(f'Problem reading image file: {e}')
 
