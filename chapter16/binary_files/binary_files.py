@@ -1,4 +1,4 @@
-"""Demonstrate binary file operations."""
+"""Demonstrate binary file I/O."""
 
 import os
 
