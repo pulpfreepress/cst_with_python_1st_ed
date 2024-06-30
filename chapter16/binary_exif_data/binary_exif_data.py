@@ -3,6 +3,12 @@
 import os
 import types
 
+# JPEG Markers and Segments
+jpeg_markers = types.SimpleNamespace()
+jpeg_markers.SOI = b'\xff\xd8'
+jpeg_markers.EOI = b'\xff\xd9'
+jpeg_markers.APP1 = b'\xff\xe1'
+jpeg_markers.COMMENT = b'\xff\xfe'
 
 # Tag Codes -- String version of 2-byte hex values 
 # Very small subset of EXIF tags
@@ -88,20 +94,37 @@ def main():
 		# Open JPEG file in read binary mode
 		with open(os.path.join(image_dir_path, filename), 'rb') as f:
 			content = f.read()
+
+			# Verify it's a JPEG file
+			if is_jpeg_file(content[:2], content[-2:]):
+				print(f'{filename} is a JPEG file. Extracting EXIF data...')
+			else:
+				print(f'{filename} is not a JPEG file. Exiting...')
+				return
+			
+			app1_segment_offset = content.index(jpeg_markers.APP1)
+			if app1_segment_offset != 0:
+				print(f'App1 Segment offset: {app1_segment_offset}')
+
+			comment_segment_offset = content.index(jpeg_markers.COMMENT)
+			if comment_segment_offset != 0:
+				print(f'Comment Segment offset: {comment_segment_offset}')
+
+
 			f.seek(0)
 			print(f'Frist 24 bytes: {f.read(48)}')
 			f.seek(0)
-			exif_section_offset = content.index(bytes.fromhex('FFFe'))
-			f.seek(exif_section_offset)
-			print(f'EXIF Section Offset: {exif_section_offset} Read 2 : {f.read(2)}')
-			f.seek(exif_section_offset + 2)
-			print(f'Offset: {exif_section_offset + 2} Read 4 : {f.read(4)}')
-			f.seek(exif_section_offset + 6)
-			print(f'Offset: {exif_section_offset + 6} Read 4 : {f.read(4)}')
-			f.seek(exif_section_offset + 8)
-			print(f'First Endian \'I\' Offset: {exif_section_offset + 8} Read 2 : {f.read(2)}')
+			
+			f.seek(comment_segment_offset)
+			print(f'Comment Section Offset: {comment_segment_offset} Read 2 : {f.read(2)}')
+			f.seek(comment_segment_offset + 2)
+			print(f'Offset: {comment_segment_offset + 2} Read 4 : {f.read(4)}')
+			f.seek(comment_segment_offset + 6)
+			print(f'Offset: {comment_segment_offset + 6} Read 4 : {f.read(4)}')
+			f.seek(comment_segment_offset + 8)
+			print(f'First Endian \'I\' Offset: {comment_segment_offset + 8} Read 2 : {f.read(2)}')
 
-			first_endian_byte_offset = exif_section_offset + 8
+			first_endian_byte_offset = comment_segment_offset + 8
 			f.seek(first_endian_byte_offset + 8)
 			exif_entries = int(swap_bytes(f.read(2)))
 			print(f'Exif Entries: {exif_entries}')
@@ -139,10 +162,16 @@ def main():
 		print(f'Problem reading image file: {e}')
 
 
+def is_jpeg_file(first_two_file_bytes:bytes, last_two_file_bytes:bytes)->bool:
+	if __debug__:
+		print(f'{first_two_file_bytes} : {last_two_file_bytes}')
+	return (first_two_file_bytes == jpeg_markers.SOI) and (last_two_file_bytes == jpeg_markers.EOI)
 
 def swap_bytes(b:bytes)-> bytes:
-	"""Swap little endian bytes"""
+	"""Swap little endian bytes."""
 	return b[1] + b[0]
+
+
 
 
 if __name__ == '__main__':
