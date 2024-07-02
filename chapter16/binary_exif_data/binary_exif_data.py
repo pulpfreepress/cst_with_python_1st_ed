@@ -7,16 +7,25 @@ import types
 jpeg_markers = types.SimpleNamespace()
 jpeg_markers.SOI = b'\xff\xd8'
 jpeg_markers.EOI = b'\xff\xd9'
+jpeg_markers.APP0 = b'\xff\xe0'
 jpeg_markers.APP1 = b'\xff\xe1'
 jpeg_markers.COMMENT = b'\xff\xfe'
+jpeg_markers.EXIF = b'Exif'
+jpeg_markers.INTEL = b'II'
+jpeg_markers.MOTOROLA = b'MM'
 
 # Tag Codes -- String version of 2-byte hex values 
 # Very small subset of EXIF tags
 # Object properties can be used in match cases
 tag_codes = types.SimpleNamespace()
+tag_codes.image_width = '0100'
+tag_codes.image_length = '0101'
+tag_codes.bits_per_sample = '0102'
+tag_codes.photometric_interpretation = '0106'
 tag_codes.make = '010f'
 tag_codes.model = '0110'
 tag_codes.orientation = '0112'
+tag_codes.samples_per_pixel = '0115'
 tag_codes.x_resolution = '011a'
 tag_codes.y_resolution = '011b'
 tag_codes.resolution_unit = '0128'
@@ -30,9 +39,14 @@ tag_codes.gps_info = '8825'
 
 # Tag Values
 tags = {}
+tags[tag_codes.image_width] = 'Image Width'
+tags[tag_codes.image_length] = 'Image Length'
+tags[tag_codes.bits_per_sample] = 'Bits Per Sample'
+tags[tag_codes.photometric_interpretation] = 'Photometric Interpretation'
 tags[tag_codes.make] = 'Make'
 tags[tag_codes.model] = 'Model'
 tags[tag_codes.orientation] = 'Orientation'
+tags[tag_codes.samples_per_pixel] = 'Samples Per Pixel'
 tags[tag_codes.x_resolution] = 'X-Resolution'
 tags[tag_codes.y_resolution] = 'Y-Resolution'
 tags[tag_codes.resolution_unit] = 'Resolution Unit'
@@ -95,59 +109,106 @@ def main():
 		with open(os.path.join(image_dir_path, filename), 'rb') as f:
 			content = f.read()
 
+			# Print first 48 bytes
+			f.seek(0)
+			print(f'Frist 48 bytes: {f.read(512)}')
+			f.seek(0)
+
 			# Verify it's a JPEG file
+			print(f'Verifying JPEG File...')
 			if is_jpeg_file(content[:2], content[-2:]):
 				print(f'{filename} is a JPEG file. Extracting EXIF data...')
 			else:
 				print(f'{filename} is not a JPEG file. Exiting...')
 				return
 			
-			app1_segment_offset = content.index(jpeg_markers.APP1)
-			if app1_segment_offset != 0:
-				print(f'App1 Segment offset: {app1_segment_offset}')
 
-			comment_segment_offset = content.index(jpeg_markers.COMMENT)
-			if comment_segment_offset != 0:
+			# Find Segment Offsets
+			print(f'{"-" * 10} Segment Offsets {"-" * 10}')
+			app0_segment_offset = None
+			try:
+				app0_segment_offset = content.index(jpeg_markers.APP0)
+				print(f'APP0 Segment offset: {app0_segment_offset}')
+			except Exception:
+				print(f'APP0 segment not found.')
+
+
+			app1_segment_offset = None
+			try:
+				app1_segment_offset = content.index(jpeg_markers.APP1)
+				print(f'APP1 Segment offset: {app1_segment_offset}')
+			except Exception:
+				print(f'APP1 segment not found.')
+
+
+			exif_segment_offset = None
+			try:
+				exif_segment_offset = content.index(jpeg_markers.EXIF)
+				print(f'Exif Segment offset: {exif_segment_offset}')
+			except Exception:
+				print('Exif segment not found.')
+
+
+			comment_segment_offset = None
+			try:
+				comment_segment_offset = content.index(jpeg_markers.COMMENT)
 				print(f'Comment Segment offset: {comment_segment_offset}')
+			except Exception:
+				print('Comment segment not found.')
 
-
-			f.seek(0)
-			print(f'Frist 24 bytes: {f.read(48)}')
-			f.seek(0)
 			
-			f.seek(comment_segment_offset)
-			print(f'Comment Section Offset: {comment_segment_offset} Read 2 : {f.read(2)}')
-			f.seek(comment_segment_offset + 2)
-			print(f'Offset: {comment_segment_offset + 2} Read 4 : {f.read(4)}')
-			f.seek(comment_segment_offset + 6)
-			print(f'Offset: {comment_segment_offset + 6} Read 4 : {f.read(4)}')
-			f.seek(comment_segment_offset + 8)
-			print(f'First Endian \'I\' Offset: {comment_segment_offset + 8} Read 2 : {f.read(2)}')
+			endian_offset = None
+			intel = False
+			try:
+				endian_offset = f.seek(exif_segment_offset + 6)
+				endian_marker = f.read(2)
+				if endian_marker == jpeg_markers.INTEL:
+					intel = True
+					print(f'Endian Marker: {endian_marker} : Endian is INTEL')
+				else:
+					print(f'Endian Marker: {endian_marker} : Endian is MOTOROLA')
+			
+			except Exception:
+				print('Endian offset not found.')
+				
+			
 
-			first_endian_byte_offset = comment_segment_offset + 8
-			f.seek(first_endian_byte_offset + 8)
+			f.seek(endian_offset)
+			print(f'Endian Offset: {endian_offset} Read 2 : {f.read(2)}')
+			f.seek(endian_offset + 8)
 			exif_entries = int(swap_bytes(f.read(2)))
-			print(f'Exif Entries: {exif_entries}')
+			
+			print(f'{"-" * 10} Exif Entries: {exif_entries} {"-" * 10}')
 
 			# Read Tags (Every 12 bytes)
 			for i in range(exif_entries):
 				print(f' {i} : {"*" * 20}')
+
+				
 				tag = bytearray(f.read(2))
 				print(f'Raw bytes: {bytes(tag)}')
-				tag_hex = f'{tag[1]:02x}{tag[0]:02x}'
+				tag_hex = 0
+				if intel:
+					tag_hex = f'{tag[1]:02x}{tag[0]:02x}'
+				else:
+					tag_hex = f'{tag[0]:02x}{tag[1]:02x}'
+				
 				print(f'Tag Hex: {tag_hex}')
 				print(f'Tag Name: {tags.get(tag_hex)}')
 				tag_type = int(swap_bytes(f.read(2)))
-				print(f'Tag Type: {tag_types[tag_type]}')
+				print(f'Tag Type: {tag_types[tag_type]}')	
 				data_length = int(swap_bytes(f.read(2)) + swap_bytes(f.read(2)))
 				print(f'Data Length: {data_length}')
+				
 				data_or_offset = int(swap_bytes(f.read(2)) + swap_bytes(f.read(2)))
+				
 				print(f'Data/Offset: {data_or_offset}')
-				last_position = f.tell()
 
 				if data_length > 4:
-					f.seek(first_endian_byte_offset + data_or_offset)
+					last_position = f.tell()
+					f.seek(endian_offset + data_or_offset)
 					print(f'Data: {f.read(data_length)}')
+					f.seek(last_position)
 				elif data_length == 1:
 					match tag_hex:
 						case tag_codes.orientation:
@@ -156,21 +217,24 @@ def main():
 							print(f'Data: {resolution_unit[data_or_offset]}')
 						case _: continue
 
-				f.seek(last_position)
+				
 				
 	except (OSError, Exception) as e:
 		print(f'Problem reading image file: {e}')
 
 
+# Utility Methods
+
 def is_jpeg_file(first_two_file_bytes:bytes, last_two_file_bytes:bytes)->bool:
+	"""Verify JPEG SOI and EOI."""
 	if __debug__:
-		print(f'{first_two_file_bytes} : {last_two_file_bytes}')
+		print(f'SOI: {first_two_file_bytes} : EOI: {last_two_file_bytes}')
 	return (first_two_file_bytes == jpeg_markers.SOI) and (last_two_file_bytes == jpeg_markers.EOI)
+
 
 def swap_bytes(b:bytes)-> bytes:
 	"""Swap little endian bytes."""
 	return b[1] + b[0]
-
 
 
 
