@@ -2,17 +2,17 @@
 
 import os
 import types
+from io import BufferedRandom
 
 # JPEG Markers and Segments
 jpeg_markers = types.SimpleNamespace()
 jpeg_markers.SOI = b'\xff\xd8'
 jpeg_markers.EOI = b'\xff\xd9'
-jpeg_markers.APP0 = b'\xff\xe0'
 jpeg_markers.APP1 = b'\xff\xe1'
 jpeg_markers.COMMENT = b'\xff\xfe'
 jpeg_markers.EXIF = b'Exif'
-jpeg_markers.INTEL = b'II'
-jpeg_markers.MOTOROLA = b'MM'
+jpeg_markers.INTEL = b'II*\x00'
+jpeg_markers.MOTOROLA = b'MM\x00*'
 
 # Tag Codes -- String version of 2-byte hex values 
 # Very small subset of EXIF tags
@@ -32,6 +32,7 @@ tag_codes.resolution_unit = '0128'
 tag_codes.software = '0131'
 tag_codes.datetime = '0132'
 tag_codes.artist = '013b'
+tag_codes.host_computer = '013c'
 tag_codes.ycbcrpositioning = '0213'
 tag_codes.copyright = '8298'
 tag_codes.exif_offset = '8769'
@@ -53,6 +54,7 @@ tags[tag_codes.resolution_unit] = 'Resolution Unit'
 tags[tag_codes.software] = 'Software'
 tags[tag_codes.datetime] = 'DateTime'
 tags[tag_codes.artist] = 'Artist'
+tags[tag_codes.host_computer] = 'Host Computer'
 tags[tag_codes.ycbcrpositioning] = 'YCbCrPositioning'
 tags[tag_codes.copyright] = 'Copyright'
 tags[tag_codes.exif_offset] = 'EXIF Offset'
@@ -71,7 +73,9 @@ tag_types[8] = ('Signed Short')
 tag_types[9] = ('Signed Long')
 tag_types[10] = ('Signed Rational')
 tag_types[11] = ('Single')
-tag_types[6] = ('Double')
+tag_types[12] = ('Double')
+tag_types[129] = ('UTF-8')
+
 
 # Orientation Values
 orientation = {}
@@ -98,7 +102,7 @@ def main():
 		image_dir = 'images'
 		image_dir_path = os.path.join(working_dir, image_dir)
 
-		# Create image director if it does not exist
+		# Create image directory if it does not exist
 		if not os.path.exists(image_dir_path):
 			os.makedirs(image_dir_path)
 
@@ -109,9 +113,19 @@ def main():
 		with open(os.path.join(image_dir_path, filename), 'rb') as f:
 			content = f.read()
 
+			for s in content[:512]:
+				print(f'{s:02x} ', end='')
+			
+			print()
+
+			for s in content[:512]:
+				print(f'{chr(s)} ', end='')
+			
+			print()
+
 			# Print first 48 bytes
 			f.seek(0)
-			print(f'Frist 48 bytes: {f.read(512)}')
+			print(f'Frist 48 bytes:\n{f.read(512)}')
 			f.seek(0)
 
 			# Verify it's a JPEG file
@@ -125,14 +139,7 @@ def main():
 
 			# Find Segment Offsets
 			print(f'{"-" * 10} Segment Offsets {"-" * 10}')
-			app0_segment_offset = None
-			try:
-				app0_segment_offset = content.index(jpeg_markers.APP0)
-				print(f'APP0 Segment offset: {app0_segment_offset}')
-			except Exception:
-				print(f'APP0 segment not found.')
-
-
+	
 			app1_segment_offset = None
 			try:
 				app1_segment_offset = content.index(jpeg_markers.APP1)
@@ -156,12 +163,15 @@ def main():
 			except Exception:
 				print('Comment segment not found.')
 
+
+			
+
 			
 			endian_offset = None
 			intel = False
 			try:
 				endian_offset = f.seek(exif_segment_offset + 6)
-				endian_marker = f.read(2)
+				endian_marker = f.read(4)
 				if endian_marker == jpeg_markers.INTEL:
 					intel = True
 					print(f'Endian Marker: {endian_marker} : Endian is INTEL')
@@ -172,10 +182,12 @@ def main():
 				print('Endian offset not found.')
 				
 			
-
 			f.seek(endian_offset)
-			print(f'Endian Offset: {endian_offset} Read 2 : {f.read(2)}')
+			print(f'Endian Offset: {endian_offset} Read 4 : {f.read(4)}')
 			f.seek(endian_offset + 8)
+			exif_entries_raw_bytes = bytearray(f.read(2))
+			print(f'Exif Entries Raw Bytes: {bytes(exif_entries_raw_bytes)}')
+			f.seek(-2, 1)
 			exif_entries = int(swap_bytes(f.read(2)))
 			
 			print(f'{"-" * 10} Exif Entries: {exif_entries} {"-" * 10}')
@@ -187,27 +199,35 @@ def main():
 				
 				tag = bytearray(f.read(2))
 				print(f'Raw bytes: {bytes(tag)}')
+				
+				
 				tag_hex = 0
 				if intel:
 					tag_hex = f'{tag[1]:02x}{tag[0]:02x}'
+					
 				else:
 					tag_hex = f'{tag[0]:02x}{tag[1]:02x}'
-				
+					
+
 				print(f'Tag Hex: {tag_hex}')
 				print(f'Tag Name: {tags.get(tag_hex)}')
 				tag_type = int(swap_bytes(f.read(2)))
-				print(f'Tag Type: {tag_types[tag_type]}')	
+				print(f'Tag Type: {tag_types[tag_type]}')
+
 				data_length = int(swap_bytes(f.read(2)) + swap_bytes(f.read(2)))
 				print(f'Data Length: {data_length}')
+
 				
 				data_or_offset = int(swap_bytes(f.read(2)) + swap_bytes(f.read(2)))
-				
 				print(f'Data/Offset: {data_or_offset}')
 
+				
 				if data_length > 4:
 					last_position = f.tell()
+
 					f.seek(endian_offset + data_or_offset)
 					print(f'Data: {f.read(data_length)}')
+
 					f.seek(last_position)
 				elif data_length == 1:
 					match tag_hex:
@@ -215,12 +235,13 @@ def main():
 							print(f'Data: {orientation[data_or_offset]}')
 						case tag_codes.resolution_unit:
 							print(f'Data: {resolution_unit[data_or_offset]}')
+							
 						case _: continue
 
-				
-				
 	except (OSError, Exception) as e:
 		print(f'Problem reading image file: {e}')
+
+
 
 
 # Utility Methods
@@ -235,6 +256,7 @@ def is_jpeg_file(first_two_file_bytes:bytes, last_two_file_bytes:bytes)->bool:
 def swap_bytes(b:bytes)-> bytes:
 	"""Swap little endian bytes."""
 	return b[1] + b[0]
+
 
 
 
