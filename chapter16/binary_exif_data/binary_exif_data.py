@@ -4,6 +4,7 @@ import os
 import types
 from io import BufferedRandom
 
+
 # JPEG Markers and Segments
 jpeg_markers = types.SimpleNamespace()
 jpeg_markers.SOI = b'\xff\xd8'
@@ -37,6 +38,7 @@ tag_codes.ycbcrpositioning = '0213'
 tag_codes.copyright = '8298'
 tag_codes.exif_offset = '8769'
 tag_codes.gps_info = '8825'
+tag_codes.unknown = '0000'
 
 # Tag Values
 tags = {}
@@ -59,6 +61,7 @@ tags[tag_codes.ycbcrpositioning] = 'YCbCrPositioning'
 tags[tag_codes.copyright] = 'Copyright'
 tags[tag_codes.exif_offset] = 'EXIF Offset'
 tags[tag_codes.gps_info] = 'GPS Info'
+tags[tag_codes.unknown] = 'Unknown'
 
 # Tag Types
 tag_types = {}
@@ -111,21 +114,21 @@ def main():
 
 		# Open JPEG file in read binary mode
 		with open(os.path.join(image_dir_path, filename), 'rb') as f:
+			
+			# Read entire file
 			content = f.read()
 
+			# Print first 512 bytes
 			for s in content[:512]:
 				print(f'{s:02x} ', end='')
-			
 			print()
 
 			for s in content[:512]:
 				print(f'{chr(s)} ', end='')
-			
 			print()
 
-			# Print first 48 bytes
 			f.seek(0)
-			print(f'Frist 48 bytes:\n{f.read(512)}')
+			print(f'{f.read(512)}')
 			f.seek(0)
 
 			# Verify it's a JPEG file
@@ -163,84 +166,87 @@ def main():
 			except Exception:
 				print('Comment segment not found.')
 
-
-			
-
-			
-			endian_offset = None
-			intel = False
-			try:
-				endian_offset = f.seek(exif_segment_offset + 6)
-				endian_marker = f.read(4)
-				if endian_marker == jpeg_markers.INTEL:
-					intel = True
-					print(f'Endian Marker: {endian_marker} : Endian is INTEL')
-				else:
-					print(f'Endian Marker: {endian_marker} : Endian is MOTOROLA')
-			
-			except Exception:
-				print('Endian offset not found.')
+			# Determine Endian
+			if exif_segment_offset:
+				endian_offset = None
+				intel = False
+				try:
+					endian_offset = f.seek(exif_segment_offset + 6)
+					endian_marker = f.read(4)
+					if endian_marker == jpeg_markers.INTEL:
+						intel = True
+						print(f'Endian Marker: {endian_marker} : Endian is INTEL')
+					else:
+						print(f'Endian Marker: {endian_marker} : Endian is MOTOROLA')
 				
-			
-			f.seek(endian_offset)
-			print(f'Endian Offset: {endian_offset} Read 4 : {f.read(4)}')
-			f.seek(endian_offset + 8)
-			exif_entries_raw_bytes = bytearray(f.read(2))
-			print(f'Exif Entries Raw Bytes: {bytes(exif_entries_raw_bytes)}')
-			f.seek(-2, 1)
-			exif_entries = int(swap_bytes(f.read(2)))
-			
-			print(f'{"-" * 10} Exif Entries: {exif_entries} {"-" * 10}')
-
-			# Read Tags (Every 12 bytes)
-			for i in range(exif_entries):
-				print(f' {i} : {"*" * 20}')
-
-				
-				tag = bytearray(f.read(2))
-				print(f'Raw bytes: {bytes(tag)}')
-				
-				
-				tag_hex = 0
-				if intel:
-					tag_hex = f'{tag[1]:02x}{tag[0]:02x}'
+				except Exception:
+					print('Endian offset not found.')
 					
-				else:
-					tag_hex = f'{tag[0]:02x}{tag[1]:02x}'
-					
+				# Print the endian marker
+				f.seek(endian_offset)
+				print(f'Endian Offset: {endian_offset} Read 4 : {f.read(4)}')
+				f.seek(endian_offset + 8)
+				exif_entries_raw_bytes = bytearray(f.read(2))
 
-				print(f'Tag Hex: {tag_hex}')
-				print(f'Tag Name: {tags.get(tag_hex)}')
-				tag_type = int(swap_bytes(f.read(2)))
-				print(f'Tag Type: {tag_types[tag_type]}')
-
-				data_length = int(swap_bytes(f.read(2)) + swap_bytes(f.read(2)))
-				print(f'Data Length: {data_length}')
-
+				# How many EXIF records are there?
+				print(f'Exif Entries Raw Bytes: {bytes(exif_entries_raw_bytes)}')
+				f.seek(-2, 1)
+				exif_entries = int(swap_bytes(f.read(2)))
 				
-				data_or_offset = int(swap_bytes(f.read(2)) + swap_bytes(f.read(2)))
-				print(f'Data/Offset: {data_or_offset}')
+				# Print each EXIF record
+				print(f'{"-" * 10} Exif Entries: {exif_entries} {"-" * 10}')
 
+				print(f'{"No.":<8}{"Raw Bytes":<10}{"Tag Hex":<10}{"Tag Name":30}{"Tag Type":<20}{"Length":<8}{"Data/Offset":<15}{"Data":<50}')
+
+				# Read Tags (Every 12 bytes)
+				# ----Tag Record Layout----
+				# Tag:         2 Bytes
+				# Tag Type:    2 Bytes 
+				# Data Length: 4 Bytes
+				# Data/Offset: Variable
+				###########################
+
+				for i in range(exif_entries):
+					# Read tag bytes
+					tag = bytearray(f.read(2))
+
+					# Convert to hex string
+					tag_hex = 0
+					if intel:
+						tag_hex = f'{tag[1]:02x}{tag[0]:02x}'
+						
+					else:
+						tag_hex = f'{tag[0]:02x}{tag[1]:02x}'
+
+					# Read Tag Type
+					tag_type = int(swap_bytes(f.read(2)))
+					# Read Data Length
+					data_length = int(swap_bytes(f.read(2)) + swap_bytes(f.read(2)))
+					# Read data or offset
+					data_or_offset = int(swap_bytes(f.read(2)) + swap_bytes(f.read(2)))
 				
-				if data_length > 4:
-					last_position = f.tell()
+					data = 'None'
+					if data_length > 4:
+						last_position = f.tell()
+						f.seek(endian_offset + data_or_offset)
+						data = f.read(data_length)
+						f.seek(last_position)
+					elif data_length == 1:
+						match tag_hex:
+							case tag_codes.orientation:
+								data = orientation[data_or_offset]
+							case tag_codes.resolution_unit:
+								data = resolution_unit[data_or_offset]
+							case _: pass
 
-					f.seek(endian_offset + data_or_offset)
-					print(f'Data: {f.read(data_length)}')
 
-					f.seek(last_position)
-				elif data_length == 1:
-					match tag_hex:
-						case tag_codes.orientation:
-							print(f'Data: {orientation[data_or_offset]}')
-						case tag_codes.resolution_unit:
-							print(f'Data: {resolution_unit[data_or_offset]}')
-							
-						case _: continue
+					print(f'{i: <8d}{f'{tag[0]:02x}{tag[1]:02x}':10}{tag_hex:<10}{tags.get(tag_hex):30}{tag_types.get(tag_type):<20}{data_length:<8d}{data_or_offset:<15}{data}')
+			else:
+				print(f'{filename} does not contain an EXIF segment. ')
+
 
 	except (OSError, Exception) as e:
 		print(f'Problem reading image file: {e}')
-
 
 
 
