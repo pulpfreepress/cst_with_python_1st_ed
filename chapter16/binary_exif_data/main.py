@@ -75,98 +75,110 @@ def main():
 			except Exception:
 				print('Comment segment not found.')
 
-			# Determine Endian
-			if exif_segment_offset:
-				endian_offset = None
-				intel = False
-				try:
-					endian_offset = f.seek(exif_segment_offset + 6)
-					endian_marker = f.read(4)
-					if endian_marker == jpeg_markers.INTEL:
-						intel = True
-						print(f'Endian Marker: {endian_marker} : Endian is INTEL')
-					else:
-						print(f'Endian Marker: {endian_marker} : Endian is MOTOROLA')
-				
-				except Exception:
-					print('Endian offset not found.')
-					
-				# Print the endian marker
-				f.seek(endian_offset)
-				print(f'Endian Offset: {endian_offset} Read 4 : {f.read(4)}')
-				f.seek(endian_offset + 8)
-				exif_entries_raw_bytes = bytearray(f.read(2))
-
-				# How many EXIF records are there?
-				print(f'Exif Entries Raw Bytes: {bytes(exif_entries_raw_bytes)}')
-				f.seek(-2, 1)
-				exif_entries = int(swap_bytes(f.read(2)))
-				print(f'Exif Entries: {exif_entries}')
-
-				print('*' * 130)
-				# Print column headers
-				print(f'{"No.":<8}{"Raw Bytes":<10}{"Tag Hex":<10}{"Tag Name":30}{"Tag Type":<20}\
-{"Length":<8}{"Data/Offset":<15}{"Data":<50}')
-				print('-' * 130)
-
-				# Read Tag Records (Every 12 bytes from just past exif_entries bytes.)
-				# 
-				# ----Tag Record Layout----
-				# Tag:         2 Bytes
-				# Tag Type:    2 Bytes 
-				# Data Length: 4 Bytes
-				# Data/Offset: 4 Bytes
-				###########################
-
-				for i in range(exif_entries):
-					# Read tag bytes
-					tag = bytearray(f.read(2))
-
-					# Convert to hex string
-					tag_hex = 0
-					if intel:
-						tag_hex = f'{tag[1]:02x}{tag[0]:02x}'
-						
-					else:
-						tag_hex = f'{tag[0]:02x}{tag[1]:02x}'
-
-					# Read Tag Type
-					tag_type = int(swap_bytes(f.read(2)))
-					# Read Data Length
-					data_length = int(swap_bytes(f.read(2)) + swap_bytes(f.read(2)))
-					# Read data or offset
-					data_or_offset = int(swap_bytes(f.read(2)) + swap_bytes(f.read(2)))
-				
-					data = 'None'
-					if data_length > 4:
-						last_position = f.tell()
-						f.seek(endian_offset + data_or_offset)
-						data = f.read(data_length)
-						f.seek(last_position)
-					elif data_length == 1:
-						match tag_hex:
-							case tag_codes.orientation:
-								data = orientation[data_or_offset]
-							case tag_codes.resolution_unit:
-								data = resolution_unit[data_or_offset]
-							case _: pass
-
-					# Print EXIF data
-					print(f'{i: <8d}{f'{tag[0]:02x}{tag[1]:02x}':10}{tag_hex:<10}{tags.get(tag_hex):30}\
-{tag_types.get(tag_type):<20}{data_length:<8d}{data_or_offset:<15}{data}')
-			else:
+			# Exit if no EXIT segment
+			if not exif_segment_offset:
 				print(f'{filename} does not contain an EXIF segment. ')
+				print('Exiting program.')
+				return
+
+			# Determine Endian
+			endian_offset = None
+			intel = False
+			try:
+				endian_offset = f.seek(exif_segment_offset + 6)
+				endian_marker = f.read(4)
+				if endian_marker == jpeg_markers.INTEL:
+					intel = True
+					print(f'Endian Marker: {endian_marker} : Endian is INTEL')
+				else:
+					print(f'Endian Marker: {endian_marker} : Endian is MOTOROLA')
+			
+			except Exception:
+				print('Endian offset not found.')
+				
+			# Print the endian marker
+			f.seek(endian_offset)
+			print(f'Endian Offset: {endian_offset} Read 4 : {f.read(4)}')
+			f.seek(endian_offset + 8)
+			exif_entries_raw_bytes = bytearray(f.read(2))
+
+			# How many EXIF records are there?
+			print(f'Exif Entries Raw Bytes: {bytes(exif_entries_raw_bytes)}')
+			f.seek(-2, 1)
+			exif_entries = int(swap_bytes(f.read(2)))
+			print(f'Exif Entries: {exif_entries}')
+
+			print('*' * 130)
+			# Print column headers
+			print(f'{"No.":<8}{"Raw Bytes":<10}{"Tag Hex":<10}\
+{"Tag Name":30}{"Tag Type":<20} {"Length":<8}{"Data/Offset":<15}{"Data":<50}')
+			print('-' * 130)
+
+			# Read Tag Records
+			# Every 12 bytes from just past exif_entries bytes.
+			# 
+			# ----Tag Record Layout----
+			# Tag:         2 Bytes
+			# Tag Type:    2 Bytes 
+			# Data Length: 4 Bytes
+			# Data/Offset: 4 Bytes
+			###########################
+
+			for i in range(exif_entries):
+				# Read tag bytes
+				tag = bytearray(f.read(2))
+
+				# Convert to hex string
+				tag_hex = 0
+				if intel:
+					tag_hex = f'{tag[1]:02x}{tag[0]:02x}'
+					
+				else:
+					tag_hex = f'{tag[0]:02x}{tag[1]:02x}'
+
+				# Read Tag Type
+				tag_type = int(swap_bytes(f.read(2)))
+				# Read Data Length
+				data_length = \
+					int(swap_bytes(f.read(2)) + swap_bytes(f.read(2)))
+				# Read data or offset
+				data_or_offset = \
+					int(swap_bytes(f.read(2)) + swap_bytes(f.read(2)))
+			
+				data = 'None'
+				if data_length > 4:
+					last_position = f.tell()
+					f.seek(endian_offset + data_or_offset)
+					data = f.read(data_length)
+					f.seek(last_position)
+				elif data_length == 1:
+					match tag_hex:
+						case tag_codes.orientation:
+							data = orientation[data_or_offset]
+						case tag_codes.resolution_unit:
+							data = resolution_unit[data_or_offset]
+						case _: pass
+
+				# Print EXIF data
+				print(f'{i: <8d}{f"{tag[0]:02x}{tag[1]:02x}":10}\
+{tag_hex: <10}{tags.get(tag_hex):30}{tag_types.get(tag_type):<20}\
+{data_length:<8d}{data_or_offset:<15}{data}')
+		
+			
 
 	except (OSError, Exception) as e:
 		print(f'Problem reading image file: {e}')
 
 
 # Utility Methods
-def is_jpeg_file(first_two_file_bytes:bytes, last_two_file_bytes:bytes)->bool:
+def is_jpeg_file(first_two_file_bytes:bytes, 
+				 last_two_file_bytes:bytes)->bool:
 	"""Verify JPEG SOI and EOI."""
 	if __debug__:
-		print(f'SOI: {first_two_file_bytes} : EOI: {last_two_file_bytes}')
-	return (first_two_file_bytes == jpeg_markers.SOI) and (last_two_file_bytes == jpeg_markers.EOI)
+		print(f'SOI: {first_two_file_bytes} : \
+		EOI: {last_two_file_bytes}')
+	return (first_two_file_bytes == jpeg_markers.SOI) \
+		and (last_two_file_bytes == jpeg_markers.EOI)
 
 
 def swap_bytes(b:bytes)-> bytes:
