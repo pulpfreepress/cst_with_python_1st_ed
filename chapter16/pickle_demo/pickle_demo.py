@@ -23,12 +23,15 @@ def main():
 		classes['it-566']['students'] = ['Wafa', 'Nawaf', 
 									'Anthony', 'Dishant', 'Quinton',
 									'Najoud', 'Selenge']
-		
+		# Print to console
+		print(f'Original Data:\n{classes}')
+
 		# Pickle
 		pickled_data = pickle.dumps(classes)
 
-		# Secure to verify no tampering
-		expected_digest = hmac.new(b'some_key_value', pickled_data, hashlib.sha256).hexdigest()
+		# Calculate digest signature to verify no tampering
+		expected_digest = hmac.new(b'some_key_value', pickled_data, \
+							 hashlib.sha256).hexdigest()
 
 		# Write to file
 		with open(os.path.join(data_dir_path, filename), 'wb') as f:
@@ -36,7 +39,7 @@ def main():
 
 		# Press any key to continue
 		input('Press Any Key To Continue...')
-
+		print('-' * 40)
 
 		# Read file and verify signature
 		pickled_data = None
@@ -44,7 +47,8 @@ def main():
 		with open(os.path.join(data_dir_path, filename), 'rb') as f:
 			pickled_data = f.read()
 
-		digest = hmac.new(b'some_key_value', pickled_data, hashlib.sha256).hexdigest()
+		digest = hmac.new(b'some_key_value', pickled_data, \
+					hashlib.sha256).hexdigest()
 
 		if not hmac.compare_digest(digest, expected_digest):
 			print(f'Invalid signature! Data is invalid.')
@@ -53,14 +57,6 @@ def main():
 			print(f'Valid signature! Unpickling data.')
 			classes = pickle.loads(pickled_data)
 			print(f'{classes}')
-			
-
-		
-
-
-
-		
-	
 
 	except (OSError, Exception) as e:
 		print(f'Problem pickling data: {e}')
