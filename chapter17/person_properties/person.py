@@ -2,37 +2,41 @@
 
 from datetime import date
 from datetime import datetime
-from datetime import timedelta
 
 class Person:
 	"""Defines a Person class."""
 	
 	# This is a class-wide attribute
-	# shared by all Person objects 
+	# shared by all Person objects
+	# Define and initialize these first
 	count = 0
 
+	# Define the __init__() method next
 	def __init__(self, first_name:str='John', 
 			  middle_name:str='J', last_name:str='Doe',
-			  birthdate:datetime=datetime.now())->None:
+			  date_of_birth:datetime=datetime.now())->None:
 		"""Initializes Person object with known state."""
 		self.first_name = first_name
 		self.middle_name = middle_name
 		self.last_name = last_name
 		# Underscore warns clients not to access this attribute
-		self._birthdate = birthdate
+		self._dob = date_of_birth
 		Person.count += 1
 		if __debug__:
 			print(f'__init__() method called...Person object initialized!')
 
+	# Define properties next
+	# Group property definition with 
+	# corresponding setters and deleters (if any)
 	@property
 	def birthday(self)->datetime:
 		"""Return person's birthday."""
-		return self._birthdate
+		return self._dob
 	
 	@birthday.setter
 	def birthday(self, value:datetime)->None:
 		"""Set person's birthday."""
-		self._birthdate = value
+		self._dob = value
 
 	@property
 	def full_name(self)->str:
@@ -43,19 +47,17 @@ class Person:
 	def age(self)->int:
 		"""Return person's age in years."""
 		today = datetime.now().date()
-		b_day = date(today.year, self._birthdate.month, self._birthdate.day)
+		b_day = date(today.year, self._dob.month, self._dob.day)
 		adjustment = (1 if today < b_day else 0)
-		return (today.year - self._birthdate.year) - adjustment
-
+		return (today.year - self._dob.year) - adjustment
 
 	@property
 	def full_name_and_age(self):
 		"""Return person's full name and age."""
 		return f'{self.full_name} {self.age}'
 
-
 	def __str__(self)->str:
 		"""Returns a string representation of the object."""
-		return self.full_name
+		return self.full_name_and_age
 
 	
