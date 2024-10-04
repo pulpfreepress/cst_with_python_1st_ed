@@ -7,7 +7,7 @@ def main():
 	# Create dictionary following rules from table 15-2
 	classes = {}
 	classes['it566'] = {}
-	classes['it566']['campus'] = 'Balston Center'
+	classes['it566']['campus'] = 'Ballston Center'
 	classes['it566']['semester'] = 'Fall'
 	classes['it566']['year'] = 2024
 	classes['it566']['dates'] = {}
