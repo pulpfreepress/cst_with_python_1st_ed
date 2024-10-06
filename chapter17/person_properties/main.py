@@ -12,7 +12,7 @@ def main():
 	p3 = Person()
 	p3.first_name = 'Hannah'
 	p3.middle_name = 'J'
-	p3.last_name = 'Bananna'
+	p3.last_name = 'Banana'
 	p3.birthday = datetime(1994, 3, 14)
 	print(f'p3 = {p3} | Object Count: {Person.count}')
 	print(f'p3\'s Full Name and Age: {p3.full_name_and_age}')

@@ -10,7 +10,7 @@ def main():
 	p3 = Person()
 	p3.first_name = 'Hannah'
 	p3.middle_name = 'J'
-	p3.last_name = 'Bananna'
+	p3.last_name = 'Banana'
 	print(f'p3 = {p3} | Object Count: {p3.count}')
 
 	print('*' * 40)

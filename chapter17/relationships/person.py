@@ -56,7 +56,7 @@ class Person:
 
 
 	@property
-	def full_name_and_age(self):
+	def full_name_and_age(self)->str:
 		"""Return person's full name and age."""
 		return f'{self.full_name} {self.age}'
 
@@ -66,7 +66,8 @@ class Person:
 		return self.full_name_and_age
 	
 	
-	def add_relationship(self, p, relationship:str)->None:
+	def add_relationship(self, p:any, relationship:str)->None:
+		"""Add relationship to p."""
 		if relationship not in self._relationships:
 			self._relationships[relationship] = []
 
@@ -74,7 +75,8 @@ class Person:
 			case 'parent' | 'father' | 'mother' \
 				| 'sibling' | 'brother' | 'sister' \
 				| 'child' | 'daughter' | 'son' \
-				| 'aunt' | 'uncle' | 'niece' | 'nephew':
+				| 'aunt' | 'uncle' | 'niece' | 'nephew' \
+				| 'grand aunt':
 				if isinstance(p, Person):
 					if p not in self._relationships[relationship]:
 						self._relationships[relationship].append(p)
@@ -82,7 +84,8 @@ class Person:
 				self._relationships[relationship].append(p)
 
 
-	def show_relationships(self):
+	def show_relationships(self)->None:
+		"""Show all relationships."""
 		for key in self._relationships:
 			for entry in self._relationships[key]:
 				print(f'{self.full_name} --> {key} : {entry}')
