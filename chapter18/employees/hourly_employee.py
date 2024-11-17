@@ -1,4 +1,4 @@
-"""Contains definition for HourlyEmployee class."""
+"""Contains the definition for the HourlyEmployee class."""
 
 from employee import Employee
 from datetime import datetime

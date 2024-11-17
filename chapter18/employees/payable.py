@@ -1,4 +1,4 @@
-"""Implement the definition of a Payable entitiy."""
+"""Contains the definition of a Payable entitiy."""
 
 from abc import ABC, abstractmethod
 

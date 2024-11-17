@@ -1,4 +1,4 @@
-"""Contains definition for SalariedEmployee class."""
+"""Contains the definition for the SalariedEmployee class."""
 
 from employee import Employee
 from datetime import datetime
@@ -12,8 +12,6 @@ class SalariedEmployee(Employee):
 				   date_of_birth, employee_id)
 		self.employee_id = employee_id
 		self._yearly_salary = yearly_salary
-
-
 
 	@property
 	def yearly_salary(self)->float:

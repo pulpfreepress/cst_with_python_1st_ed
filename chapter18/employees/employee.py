@@ -1,4 +1,4 @@
-"""Provide definition for Employee class."""
+"""Contains the definition for the Employee class."""
 
 from person import Person
 from payable import Payable
