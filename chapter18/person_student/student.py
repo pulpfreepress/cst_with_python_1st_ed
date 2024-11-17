@@ -8,7 +8,7 @@ class Student(Person):
 
 	def __init__(self, first_name:str='John', middle_name:str='J',
 			last_name:str='Doe', date_of_birth:datetime=datetime.now(),
-			student_id:str='0000', major:str='none'):
+			student_id:str='0000', major:str='none')->None:
 		"""Initialize instance."""
 		super().__init__(first_name, middle_name, last_name, date_of_birth)
 		self.student_id=student_id

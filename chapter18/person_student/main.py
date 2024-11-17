@@ -12,6 +12,10 @@ def main():
 			datetime(1976, 3, 3), '20242780', 'Computer Science')
 	print(f's1 == {s1}')
 
+	people_list = [p1, s1]
+
+	for p in people_list:
+		print(f'{p}')
 
 
 if __name__ == '__main__':
