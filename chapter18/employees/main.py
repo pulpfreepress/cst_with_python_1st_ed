@@ -1,10 +1,9 @@
 """Demonstrate Abstract Base Classes."""
-
+from employee import Employee
 from hourly_employee import HourlyEmployee
 from salaried_employee import SalariedEmployee
 from datetime import datetime
 import locale
-
 
 def main():
 	locale.setlocale(locale.LC_ALL, '')
@@ -24,6 +23,10 @@ def main():
 	for e in employees:
 		print(f'Employee: {e} Pay: {locale.currency(e.pay(), grouping=True)}')
 
+	# What if you tried to instantiate an Employee?
+	# It will throw and error saying you can't 
+	# instantiate an abstract class missing the pay() method.
+	#e3 = Employee() 
 
 if __name__ == '__main__':
 	main()
