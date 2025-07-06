@@ -63,5 +63,11 @@ class Person:
 		if isinstance(other, Person):
 			return self.age == other.age
 		return False
+	
+
+	def __lt__(self, other):
+		if isinstance(other, Person):
+			return self.age < other.age
+		return False
 
 	
