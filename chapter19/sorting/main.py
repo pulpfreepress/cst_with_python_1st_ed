@@ -15,8 +15,12 @@ def main():
 	for p in people:
 		print(f'{p.full_name_and_age}')
 	
-	print('After Sort:')
+	print('\nAfter Sort:')
 	for p in sorted_people:
+		print(f'{p.full_name_and_age}')
+
+	print('\nAfter Sort Reversed:')
+	for p in sorted(sorted_people, reverse=True):
 		print(f'{p.full_name_and_age}')
 
 
