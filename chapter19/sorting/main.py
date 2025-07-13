@@ -31,6 +31,12 @@ def main():
 	
 	print(table)
 
+
+	# list.sort()
+	print("\n\n")
+	people.sort()
+	for p in people:
+		print(f'{p}')
 	
 	
 if __name__ == '__main__':
