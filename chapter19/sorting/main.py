@@ -1,4 +1,4 @@
-"""Demonstrate object equality."""
+"""Demonstrate object sorting."""
 
 from person import Person
 from datetime import datetime

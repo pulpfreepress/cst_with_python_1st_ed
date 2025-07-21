@@ -10,7 +10,7 @@ def main():
 	p3 = p1
 	print(f'Is Rick the same age as David?: {p1 == p2}')
 	print(f'Is p1 the same object as p2?: {p1 is p2}')
-	print(f'Is p1 the same age as p3?: {p1 == p2}')
+	print(f'Is p1 the same age as p3?: {p1 == p3}')
 	print(f'Is p1 the same object as p3?: {p1 is p3}')
 
 
