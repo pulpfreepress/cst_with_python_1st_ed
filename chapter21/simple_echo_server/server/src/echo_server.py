@@ -15,8 +15,6 @@ class EchoServer():
 		""" Initializer method takes two arguments:
 			ip_address & port. 
 		"""
-		self._ip = ip
-		self._port = port
 		self._listen(ip, port)
 		self._accept_connection()
 

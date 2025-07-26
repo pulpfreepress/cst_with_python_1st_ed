@@ -9,8 +9,7 @@ class EchoClient():
 	"""Implements the EchoClient class. """
 
 	def __init__(self, ip:str, port:int)->None:
-		self._ip = ip
-		self._port = port
+		
 		self._connect(ip, port)
 
 
