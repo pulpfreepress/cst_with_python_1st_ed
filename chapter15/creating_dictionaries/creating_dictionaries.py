@@ -24,7 +24,7 @@ def main():
 	print(f'Value at my_dict[keyOne] == {my_dict[keyOne]}')
 	print(f'Value at my_dict["a"] == {my_dict["a"]}')
 
-	# Create empty dictionay with dict() constructor
+	# Create empty dictionary with dict() constructor
 	book_info = dict()
 	book_info['bookTitle'] = 'Computer Scripting Techniques with Python'
 	book_info['author'] = 'Rick Miller'
