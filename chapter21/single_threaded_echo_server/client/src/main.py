@@ -8,6 +8,7 @@ def main():
 
 		while (input_string := input('Enter message or "q" to quit: ')).upper() not in ['Q']:
 			client.send(input_string)
+			client.process_server_response()
 	except Exception as e:
 		print(f'{e}')
 	finally:	

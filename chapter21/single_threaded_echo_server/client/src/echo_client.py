@@ -9,7 +9,7 @@ class EchoClient():
 	"""Implements the EchoClient class. """
 
 	def __init__(self, ip:str, port:int)->None:
-		
+		"""Initialize client to connect to server on ip and port."""
 		self._connect(ip, port)
 
 
@@ -33,13 +33,13 @@ class EchoClient():
 		"""
 		try:
 			self.client.send(bytearray(message_string, 'utf-8'))
-			self._process_server_response()
+			
 		except Exception as e:
 			print(f'Problem sending message to server: {e}')
 
 
 	# Process server response
-	def _process_server_response(self):
+	def process_server_response(self):
 		""" Processes server response. Decodes raw data sent from the server."""
 		try:
 			raw_response = self.client.recv(2048)

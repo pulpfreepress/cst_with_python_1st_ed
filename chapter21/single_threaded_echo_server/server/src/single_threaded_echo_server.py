@@ -8,8 +8,8 @@ import os
 import sys
 
 
-class EchoServer():
-	"""Implements the EchoServer class."""
+class SingleThreadedEchoServer():
+	"""Implements the SingleThreadedEchoServer class."""
 
 	def __init__(self, ip:str, port:int)->None:
 		""" Initializer method takes two arguments:
@@ -41,15 +41,14 @@ class EchoServer():
 
 	# Accept incoming connection
 	def _accept_connection(self):
-		""" Accepts incoming client connections and hands off request processing
-		to new thread.
+		""" Accepts and processes incoming client connections.
 		"""
 		try:
 			with self.server:
 				while True:
 					print(f'Waiting for incoming client connection...')
 					client, address = self.server.accept()
-					print(f'Accepted client connection from IP Address: {address[0]} and {address[1]}')
+					print(f'Accepted client connection from IP Address: {address[0]} and port {address[1]}')
 
 					with client:
 						while True:
@@ -58,9 +57,6 @@ class EchoServer():
 								break
 							request = raw_request.decode('utf-8')
 							print(f'request from client: {request}')
-							client.send(bytearray(request, 'utf-8'))
-							
-							
-					
+							client.send(bytearray(request, 'utf-8'))				
 		except Exception as e:
 			print(f'Problem accepting connection: {e}')
