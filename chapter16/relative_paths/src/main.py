@@ -1,7 +1,7 @@
 """Demonstrate writing files to relative paths."""
 
 def main():
-	file_name = 'data/data.txt'
+	file_name = 'data\data.txt'
 
 	try:
 		with open(file_name, 'w') as f:
