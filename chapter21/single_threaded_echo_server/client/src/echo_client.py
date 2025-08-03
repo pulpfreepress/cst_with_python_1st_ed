@@ -15,7 +15,9 @@ class EchoClient():
 
 	# Connect to server
 	def _connect(self, ip:str, port:int)->None:
-		""" Creates a socket object and connects to the server on ip address and port. """
+		""" Creates a socket object and connects to the server on ip address
+		and port. 
+		"""
 		try:
 			print(f'Connecting to server at IP Address: {ip} and Port: {port}')
 			self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -33,7 +35,7 @@ class EchoClient():
 		"""
 		try:
 			self.client.send(bytearray(message_string, 'utf-8'))
-			
+		
 		except Exception as e:
 			print(f'Problem sending message to server: {e}')
 
