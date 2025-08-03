@@ -5,7 +5,6 @@ from argparse import ArgumentParser
 
 def main():
 	"""Entry point."""
-
 	client = None
 	try:
 		args = configure_and_parse_commandline_arguments()
@@ -17,8 +16,8 @@ def main():
 
 			client = EchoClient(ip=ip_address, port=port)
 
-			while (input_string := input('Enter message or "q" to quit: ')).upper() \
-				not in ['Q']:
+			while (input_string := \
+		  		input('Enter message or "q" to quit: ')).upper() not in ['Q']:
 				client.send(input_string)
 				client.process_server_response()
 	except Exception as e:
@@ -38,15 +37,12 @@ def configure_and_parse_commandline_arguments():
 	parser.add_argument('-ip','--ipaddress', 
 					default='127.0.0.1',
 					type=str,
-					#action='store',
-					#dest='ipaddress',
 					help="Server's IP address.",  
 					required=False)
+	
 	parser.add_argument('-p','--port',
 					default=5000, 
 					type=int,
-					#action='store',
-					#dest='port',
 					help="Port to connect to.",  
 					required=False)
 	
