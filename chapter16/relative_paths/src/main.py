@@ -1,7 +1,6 @@
 """Demonstrate writing files to relative paths."""
 
 def main():
-	# Bad Practice! -- Don't Do This!
 	file_name = 'data\data.txt'
 
 	try:
