@@ -1,0 +1,96 @@
+"""Implements a multi threaded echo server that receives messages
+from one or more connected client application, prints them to the console, and
+sends the received messages back to the clients.
+"""
+
+import socket
+import os
+import sys
+import threading
+
+
+class MultiThreadedEchoServer():
+	"""Implements the MultiThreadedEchoServer class."""
+
+	def __init__(self, ip:str, port:int)->None:
+		""" Initializer method takes two arguments:
+			ip_address & port. 
+		"""
+		
+		self._listen(ip, port)
+		self._accept_connection()
+
+
+
+	# Listen for incoming connections
+	def _listen(self, ip:str, port:int)->None:
+		""" Creates a server socket and starts listening on assigned 
+		IP Address and Port.
+		"""
+		try:
+			self.server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+			if os.name == 'nt':
+				self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+			else:
+				self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
+			self.server.bind((ip, port))
+			self.server.listen(4)
+			print(f'Listening on IP Address: {self._get_all_ip_addresses()} and Port: {port}')
+			
+		except Exception as e:
+			print(f'Problem listening for incoming connection: {e}')
+			self.server.close()
+			sys.exit(0)
+
+
+	# Lists all IP addresses
+	def _get_all_ip_addresses(self):
+		try:
+			hostname = socket.gethostname()
+			_, _, addresses = socket.gethostbyname_ex(hostname)
+			for ip in addresses:
+				print(f'IP: {ip}')
+			return addresses
+			
+		except Exception as e:
+			print(f'Problem getting all IP addresses.')
+
+
+
+	# Accept incoming connection
+	def _accept_connection(self)->None:
+		""" Accepts and processes incoming client connections.
+		"""
+		client_count = 1
+		try:
+			with self.server:
+				while True:
+					print(f'Waiting for incoming client connection...')
+					client, address = self.server.accept()
+					print(f'Accepted client connection from IP Address: {address[0]} and port {address[1]}')
+
+					t = threading.Thread(target=self._process_client_connection, args=(client,))
+					t.name = f'Client {client_count}'
+					client_count += 1
+					t.start()
+					
+		except Exception as e:
+			print(f'Problem accepting connection: {e}')
+
+
+
+	# Process client connection
+	def _process_client_connection(self, client)->None:
+		"""Processes client connection."""
+		try:
+			with client:
+				while True:
+					raw_request = client.recv(1024)
+					if not raw_request:
+						break
+					request = raw_request.decode('utf-8')
+					print(f'request from {threading.current_thread().name}: {request}')
+					client.send(bytearray(request, 'utf-8'))
+			print(f'Client {threading.current_thread().name} disconnected. Goodbye!')
+		except Exception as e: 
+			print(f'Problem processing client connection.')
