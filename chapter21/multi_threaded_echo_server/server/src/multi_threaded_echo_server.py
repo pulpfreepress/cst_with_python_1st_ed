@@ -22,7 +22,6 @@ class MultiThreadedEchoServer():
 		self._accept_connection()
 
 
-
 	# Listen for incoming connections
 	def _listen(self, ip:str, port:int)->None:
 		""" Creates a server socket and starts listening on assigned 
@@ -76,14 +75,14 @@ class MultiThreadedEchoServer():
 					client, address = self.server.accept()
 					print(f'Accepted client connection from IP Address: ' \
 		   				f'{address[0]} and port {address[1]}')
-					t = threading.Thread(target=self._process_client_connection, args=(client,))
+					t = threading.Thread(target=self._process_client_connection, \
+						  args=(client,))
 					t.name = f'Client {client_count}'
 					client_count += 1
 					t.start()
 					
 		except Exception as e:
 			print(f'Problem accepting connection: {e}')
-
 
 
 	# Process client connection
@@ -96,8 +95,10 @@ class MultiThreadedEchoServer():
 					if not raw_request:
 						break
 					request = raw_request.decode('utf-8')
-					print(f'request from {threading.current_thread().name}: {request}')
+					print(f'request from {threading.current_thread().name}: ' \
+		   				f'{request}')
 					client.send(bytearray(request, 'utf-8'))
-			print(f'Client {threading.current_thread().name} disconnected. Goodbye!')
+			print(f'Client {threading.current_thread().name} ' \
+		 			f'disconnected. Goodbye!')
 		except Exception as e: 
 			print(f'Problem processing client connection.')
