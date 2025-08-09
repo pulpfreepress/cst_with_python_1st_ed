@@ -7,6 +7,8 @@ import socket
 import os
 import sys
 import threading
+import ifaddr
+from typing import List
 
 
 class MultiThreadedEchoServer():
@@ -35,7 +37,7 @@ class MultiThreadedEchoServer():
 				self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
 			self.server.bind((ip, port))
 			self.server.listen(4)
-			print(f'Listening on IP Address: {self._get_all_ip_addresses()} and Port: {port}')
+			print(f'Listening on IP Address: {self._get_all_ipv4_addresses()} and Port: {port}')
 			
 		except Exception as e:
 			print(f'Problem listening for incoming connection: {e}')
@@ -44,16 +46,17 @@ class MultiThreadedEchoServer():
 
 
 	# Lists all IP addresses
-	def _get_all_ip_addresses(self):
+	def _get_all_ipv4_addresses(self)->List:
 		try:
-			hostname = socket.gethostname()
-			_, _, addresses = socket.gethostbyname_ex(hostname)
-			for ip in addresses:
-				print(f'IP: {ip}')
-			return addresses
-			
+			adapters = ifaddr.get_adapters()
+			ips = []
+			for adapter in adapters:
+				for ip in adapter.ips:
+					if ip.is_IPv4:
+						ips.append(ip.ip)
+			return ips
 		except Exception as e:
-			print(f'Problem getting all IP addresses.')
+			print(f'Problem getting host IPs.')
 
 
 
