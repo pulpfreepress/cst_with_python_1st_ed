@@ -36,7 +36,8 @@ class MultiThreadedEchoServer():
 				self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
 			self.server.bind((ip, port))
 			self.server.listen(4)
-			print(f'Listening on IP Address: {self._get_all_ipv4_addresses()} and Port: {port}')
+			print(f'Listening on IP Address: {self._get_all_ipv4_addresses()} \
+		 and Port: {port}')
 			
 		except Exception as e:
 			print(f'Problem listening for incoming connection: {e}')
@@ -73,7 +74,8 @@ class MultiThreadedEchoServer():
 				while True:
 					print(f'Waiting for incoming client connection...')
 					client, address = self.server.accept()
-					print(f'Accepted client connection from IP Address: {address[0]} and port {address[1]}')
+					print(f'Accepted client connection from IP Address: \
+		   {address[0]} and port {address[1]}')
 					t = threading.Thread(target=self._process_client_connection, args=(client,))
 					t.name = f'Client {client_count}'
 					client_count += 1
