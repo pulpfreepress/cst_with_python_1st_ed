@@ -18,7 +18,6 @@ class MultiThreadedEchoServer():
 		""" Initializer method takes two arguments:
 			ip_address & port. 
 		"""
-		
 		self._listen(ip, port)
 		self._accept_connection()
 
@@ -47,6 +46,10 @@ class MultiThreadedEchoServer():
 
 	# Lists all IP addresses
 	def _get_all_ipv4_addresses(self)->List:
+		"""Get all IPV4 addresses used on the host machine.
+		Uses the ifaddr package. 
+		To install: pip3 install ifaddr
+		"""
 		try:
 			adapters = ifaddr.get_adapters()
 			ips = []
@@ -59,10 +62,10 @@ class MultiThreadedEchoServer():
 			print(f'Problem getting host IPs.')
 
 
-
 	# Accept incoming connection
 	def _accept_connection(self)->None:
-		""" Accepts and processes incoming client connections.
+		"""Accepts incoming client connections. 
+		Passes client socket object to separate thread for processing.
 		"""
 		client_count = 1
 		try:
@@ -71,7 +74,6 @@ class MultiThreadedEchoServer():
 					print(f'Waiting for incoming client connection...')
 					client, address = self.server.accept()
 					print(f'Accepted client connection from IP Address: {address[0]} and port {address[1]}')
-
 					t = threading.Thread(target=self._process_client_connection, args=(client,))
 					t.name = f'Client {client_count}'
 					client_count += 1
