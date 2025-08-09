@@ -3,6 +3,7 @@ from one or more connected client application, prints them to the console, and
 sends the received messages back to the clients.
 """
 
+
 import socket
 import os
 import sys
@@ -44,7 +45,7 @@ class MultiThreadedEchoServer():
 			sys.exit(0)
 
 
-	# Lists all IP addresses
+	# Lists all IPV4 addresses
 	def _get_all_ipv4_addresses(self)->List:
 		"""Get all IPV4 addresses used on the host machine.
 		Uses the ifaddr package. 
