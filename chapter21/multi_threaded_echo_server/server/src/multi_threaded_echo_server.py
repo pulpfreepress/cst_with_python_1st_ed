@@ -50,7 +50,6 @@ class MultiThreadedEchoServer():
 		"""Accepts incoming client connections. 
 		Passes client socket object to separate thread for processing.
 		"""
-		client = None
 		client_count = 1
 		try:
 			with self.server as s:
