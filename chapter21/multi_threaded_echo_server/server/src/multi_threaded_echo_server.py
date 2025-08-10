@@ -36,7 +36,7 @@ class MultiThreadedEchoServer():
 				self.server.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
 			self.server.bind((ip, port))
 			self.server.listen(4)
-			print(f'Listening on IP Address(es): {self._get_all_ipv4_addresses()}' \
+			print(f'Listening on IP Address(es): {self._get_ipv4_addresses()}' \
 		 			f' and Port: {port}')
 			
 		except Exception as e:
@@ -72,8 +72,8 @@ class MultiThreadedEchoServer():
 			print(f'Problem in _accept_connection(): {e}')
 		
 
-	# Lists all IPV4 addresses
-	def _get_all_ipv4_addresses(self)->List:
+	# Get host IPV4 addresses
+	def _get_ipv4_addresses(self)->List:
 		"""Get all IPV4 addresses used on the host machine.
 		Uses the ifaddr package. 
 		To install: pip3 install ifaddr
