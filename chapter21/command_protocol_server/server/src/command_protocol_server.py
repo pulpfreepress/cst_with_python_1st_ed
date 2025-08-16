@@ -10,6 +10,8 @@ import sys
 import threading
 import ifaddr
 from typing import List
+import random
+import json
 
 
 class CommandProtocolServer():
@@ -99,17 +101,73 @@ class CommandProtocolServer():
 					raw_request = c.recv(1024)
 					if not raw_request:
 						break
-					request = raw_request.decode('utf-8')
+					command = raw_request.decode('utf-8')
 					print(f'request from {threading.current_thread().name}: ' \
-		   				f'{request}')
-					c.sendall(bytearray(request, 'utf-8'))
+		   				f'{command}')
+					
+					match(command):
+						case 'random':
+							response = self._random()
+							c.sendall(bytearray(response, encoding='utf-8'))
+
+						case 'motivation':
+							response = self._motivation()
+							c.sendall(bytearray(response, encoding='utf-8'))
+
+						case _:
+							response = self._echo(command)
+							c.sendall(bytearray(response, encoding='utf-8'))
+					
 			print(f'Client {threading.current_thread().name} ' \
 		 			f'disconnected. Goodbye!')
 		except Exception as e: 
 			print(f'Problem in _process_client_connection(): {e}')
 
 
+	def _load_motivational_messages(self, file_path:str)->List:
+		try:
+			messages_dict = None
+			with open(file=file_path, mode="r") as f:
+				messages_dict = json.loads(f.read())
+			return list(messages_dict['messages'])
+		except Exception as e:
+			print(f'Problem loading motivational messages file: {e}')
+
+
 	def start(self)->None:
 		self._listen(self.ip, self.port)
 		self._accept_connection()
+
+
+	# Command Methods
+	def _random(self):
+		dictionary = {} # Define a dictionary
+		dictionary['command'] = 'random' # Key to store the executed command
+		dictionary['results'] = random.randint(0, 1000) # Uses the random library
+		return json.dumps(dictionary)
+	
+
+	def _echo(self, message):
+		dictionary = {} 
+		dictionary['command'] = 'default echo' 
+		dictionary['results'] = message 
+		return json.dumps(dictionary) 
+	
+	
+	def _motivation(self):
+		working_dir = os.getcwd()
+		data_dir = 'data'
+		file_name = 'motivational_messages.json'
+		file_path = os.path.join(working_dir, data_dir, file_name)
+		print(f'file_path: {file_path}')
+		message_list = self._load_motivational_messages(file_path=file_path)
+		max_list_index = len(message_list) -1
+		random_index = random.randint(0, max_list_index)
+		dictionary = {}
+		dictionary['command'] = 'motivation'
+		dictionary['results'] = message_list[random_index]
+		return json.dumps(dictionary)
+
+
+
 

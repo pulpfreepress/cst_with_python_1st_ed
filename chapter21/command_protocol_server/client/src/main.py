@@ -1,6 +1,6 @@
 """Main application for echo client. """
 
-from command_protocol_client import EchoClient
+from command_protocol_client import CommandProtocolClient
 from argparse import ArgumentParser
 
 def main():
@@ -14,7 +14,7 @@ def main():
 			ip_address = args.ipaddress
 			port = args.port
 
-			client = EchoClient(ip=ip_address, port=port)
+			client = CommandProtocolClient(ip=ip_address, port=port)
 
 			while (input_string := \
 		  		input('Enter message or "q" to quit: ')).upper() not in ['Q']:

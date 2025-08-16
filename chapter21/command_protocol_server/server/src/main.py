@@ -1,4 +1,6 @@
-"""Entry point for the SingleThreadedEchoServer."""
+"""Entry point for the CommandProtocolServer.
+Default command-line arguments are -ip='' -port=5000
+"""
 
 
 from command_protocol_server import CommandProtocolServer
