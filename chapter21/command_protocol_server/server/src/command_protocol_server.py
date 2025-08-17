@@ -1,6 +1,6 @@
 """Implements a multi threaded command protocol server that receives and
-executes commands from one or more connected client applications. Uses JSON
-to exchange commands and data with the client.
+executes commands from one or more connected client applications. Returns data
+to client in JSON format.
 """
 
 
