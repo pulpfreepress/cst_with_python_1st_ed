@@ -62,7 +62,7 @@ class CommandProtocolServer():
 					print(f'Accepted client connection from IP Address: ' \
 		   				f'{address[0]} and port {address[1]}')
 					t = threading.Thread(target=self._process_client_connection, \
-						  args=(client,))
+						  args=(client, s))
 					t.name = f'Client {client_count}'
 					t.daemon = True
 					t.start()
@@ -70,6 +70,8 @@ class CommandProtocolServer():
 					
 		except KeyboardInterrupt:
 			print(f'\n **Server shutdown from the console.**\n')
+		except IOError:
+			print(f'**Socket closed.**.')
 		except Exception as e:
 			print(f'Problem in _accept_connection(): {e}')
 		
@@ -93,7 +95,7 @@ class CommandProtocolServer():
 
 
 	# Process client connection
-	def _process_client_connection(self, client)->None:
+	def _process_client_connection(self, client, server)->None:
 		"""Processes client connection."""
 		try:
 			with client as c:
@@ -113,6 +115,11 @@ class CommandProtocolServer():
 						case 'motivation':
 							response = self._motivation()
 							c.sendall(bytearray(response, encoding='utf-8'))
+
+						case 'shutdown server':
+							response = self._shutdown()
+							c.sendall(bytearray(response, encoding='utf-8'))
+							server.close()
 
 						case _:
 							response = self._echo(command)
@@ -167,6 +174,13 @@ class CommandProtocolServer():
 		dictionary['command'] = 'motivation'
 		dictionary['results'] = message_list[random_index]
 		return json.dumps(dictionary)
+	
+
+	def _shutdown(self):
+		dictionary = {} 
+		dictionary['command'] = 'shutdown server' 
+		dictionary['results'] = 'Server shutting down!'
+		return json.dumps(dictionary) 
 
 
 

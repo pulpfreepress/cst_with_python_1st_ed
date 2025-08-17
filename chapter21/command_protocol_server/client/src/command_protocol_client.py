@@ -3,6 +3,8 @@ commands to a command protocol server.
 """
 
 import socket
+import json
+import sys
 
 
 class CommandProtocolClient():
@@ -46,8 +48,12 @@ class CommandProtocolClient():
 		try:
 			raw_response = self.client.recv(2048)
 			response = raw_response.decode('utf-8')
-			print(f'From Server: {response}')
-			
+			response_dict = json.loads(response)
+			for key, value in response_dict.items():
+				print(f'{key}: {value}')
+				
+			if response_dict['command'] in ['shutdown server']:
+				sys.exit(1)
 		except Exception as e:
 			print(f'Problem processing server response: {e}')
 
