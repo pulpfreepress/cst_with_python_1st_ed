@@ -11,7 +11,6 @@ def main():
 		args = configure_and_parse_commandline_arguments()
 		
 		if (args.ipaddress != None) and args.port:
-			print(f'IP: {args.ipaddress} Port:{args.port}')
 			ip_address = args.ipaddress
 			port = args.port
 
