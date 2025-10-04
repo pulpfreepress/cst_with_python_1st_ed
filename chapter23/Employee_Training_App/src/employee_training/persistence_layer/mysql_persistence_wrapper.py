@@ -4,6 +4,7 @@ from employee_training.application_base import ApplicationBase
 from mysql import connector
 from mysql.connector.pooling import (MySQLConnectionPool)
 import mysql.connector
+import json
 
 class MySQLPersistenceWrapper(ApplicationBase):
 	"""Implements the MySQLPersistenceWrapper class."""
@@ -18,7 +19,8 @@ class MySQLPersistenceWrapper(ApplicationBase):
 		
 		# Database Configuration Constants
 		self.DB_CONFIG = {}
-		self.DB_CONFIG['database'] = self.DATABASE["connection"]["config"]["database"]
+		self.DB_CONFIG['database'] = \
+			self.DATABASE["connection"]["config"]["database"]
 		self.DB_CONFIG['user'] = self.DATABASE["connection"]["config"]["user"]
 		self.DB_CONFIG['host'] = self.DATABASE["connection"]["config"]["host"]
 		self.DB_CONFIG['port'] = self.DATABASE["connection"]["config"]["port"]
@@ -26,11 +28,13 @@ class MySQLPersistenceWrapper(ApplicationBase):
 		self._logger.log_debug(f'DB Connection Config Dict: {self.DB_CONFIG}')
 
 		# Database Connection
-		self._connection_pool = self._initialize_database_connection_pool(self.DB_CONFIG)
+		self._connection_pool = \
+			self._initialize_database_connection_pool(self.DB_CONFIG)
 
 		# SQL Query Consants
-		self.SELECT_ALL_EMPLOYEES = f"SELECT id, first_name, middle_name, last_name, birthday, gender " \
-									f"FROM employees"
+		self.SELECT_ALL_EMPLOYEES = \
+			f"SELECT id, first_name, middle_name, last_name, birthday, gender " \
+			f"FROM employees"
 		
 
 
@@ -58,14 +62,18 @@ class MySQLPersistenceWrapper(ApplicationBase):
 		"""Initializes database connection pool."""
 		try:
 			self._logger.log_debug(f'Creating connection pool...')
-			cnx_pool = MySQLConnectionPool(pool_name = self.DATABASE["pool"]["name"],
-											pool_size=self.DATABASE["pool"]["size"],
-											pool_reset_session=self.DATABASE["pool"]["reset_session"],
-											**config)
+			cnx_pool = \
+				MySQLConnectionPool(pool_name = self.DATABASE["pool"]["name"],
+					pool_size=self.DATABASE["pool"]["size"],
+					pool_reset_session=self.DATABASE["pool"]["reset_session"],
+					**config)
 			self._logger.log_debug(f'Connection pool successfully created!')
 			return cnx_pool
 		except connector.Error as err:
 			self._logger.log_error(f'Problem creating connection pool: {err}')
+			self._logger.log_error(f'Check DB cnfg:\n{json.dumps(self.DATABASE)}')
 		except Exception as e:
 			self._logger.log_error(f'Problem creating connection pool: {e}')
+			self._logger.log_error(f'Check DB conf:\n{json.dumps(self.DATABASE)}')
+
 
