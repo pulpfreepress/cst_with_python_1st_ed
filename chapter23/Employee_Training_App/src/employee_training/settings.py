@@ -1,4 +1,4 @@
-"""Manage applicaion settings."""
+"""Manage application settings."""
 
 import json
 import platform

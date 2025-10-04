@@ -16,6 +16,9 @@ def main():
 			config = json.loads(f.read())
 			
 		db = MySQLPersistenceWrapper(config)
+		employees_list = db.select_all_employees()
+		for employee in employees_list:
+			print(f'{employee}')
 
 
 def configure_and_parse_commandline_arguments():
