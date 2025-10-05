@@ -1,0 +1,56 @@
+DEBUG:MySQLPersistenceWrapper:2025-10-04 09:05:05,369:It works!
+DEBUG:MySQLPersistenceWrapper:2025-10-04 11:31:06,853:DB Connection Config Dict: {'database': 'employee_training', 'user': 'employee_training_user', 'host': 'localhost', 'port': 8889}
+DEBUG:MySQLPersistenceWrapper:2025-10-04 11:31:06,853:Creating connection pool...
+ERROR:MySQLPersistenceWrapper:2025-10-04 11:31:06,853:Problem creating connection pool: 'db_pool'
+ERROR:MySQLPersistenceWrapper:2025-10-04 11:31:06,853:Problem with select_all_employees(): 'NoneType' object has no attribute 'get_connection'
+DEBUG:MySQLPersistenceWrapper:2025-10-04 11:52:46,208:DB Connection Config Dict: {'database': 'employee_training', 'user': 'employee_training_user', 'host': 'localhost', 'port': 8889}
+DEBUG:MySQLPersistenceWrapper:2025-10-04 11:52:46,209:Creating connection pool...
+ERROR:MySQLPersistenceWrapper:2025-10-04 11:52:46,209:Problem creating connection pool: 'db_pool'
+ERROR:MySQLPersistenceWrapper:2025-10-04 11:52:46,209:Problem with select_all_employees(): 'NoneType' object has no attribute 'get_connection'
+DEBUG:MySQLPersistenceWrapper:2025-10-04 11:53:44,100:DB Connection Config Dict: {'database': 'employee_training', 'user': 'employee_training_user', 'host': 'localhost', 'port': 8889}
+DEBUG:MySQLPersistenceWrapper:2025-10-04 11:53:44,100:Creating connection pool...
+ERROR:MySQLPersistenceWrapper:2025-10-04 11:53:44,101:Problem creating connection pool: 'db_pool'
+ERROR:MySQLPersistenceWrapper:2025-10-04 11:53:44,101:Problem with select_all_employees(): 'NoneType' object has no attribute 'get_connection'
+DEBUG:MySQLPersistenceWrapper:2025-10-04 11:56:21,112:DB Connection Config Dict: {'database': 'employee_training', 'user': 'employee_training_user', 'host': 'localhost', 'port': 8889}
+DEBUG:MySQLPersistenceWrapper:2025-10-04 11:56:21,112:Creating connection pool...
+ERROR:MySQLPersistenceWrapper:2025-10-04 11:56:21,112:Problem creating connection pool: 'db_pool'
+ERROR:MySQLPersistenceWrapper:2025-10-04 11:56:21,112:Problem with select_all_employees(): 'NoneType' object has no attribute 'get_connection'
+DEBUG:MySQLPersistenceWrapper:2025-10-04 11:57:34,739:DB Connection Config Dict: {'database': 'employee_training', 'user': 'employee_training_user', 'host': '127.0.0.1', 'port': 8889}
+DEBUG:MySQLPersistenceWrapper:2025-10-04 11:57:34,739:Creating connection pool...
+ERROR:MySQLPersistenceWrapper:2025-10-04 11:57:34,740:Problem creating connection pool: 'db_pool'
+ERROR:MySQLPersistenceWrapper:2025-10-04 11:57:34,740:Problem with select_all_employees(): 'NoneType' object has no attribute 'get_connection'
+DEBUG:MySQLPersistenceWrapper:2025-10-04 11:58:10,903:DB Connection Config Dict: {'database': 'employee_training', 'user': 'employee_training_user', 'host': 'localhost', 'port': 8889}
+DEBUG:MySQLPersistenceWrapper:2025-10-04 11:58:10,903:Creating connection pool...
+ERROR:MySQLPersistenceWrapper:2025-10-04 11:58:10,903:Problem creating connection pool: 'db_pool'
+ERROR:MySQLPersistenceWrapper:2025-10-04 11:58:10,903:Problem with select_all_employees(): 'NoneType' object has no attribute 'get_connection'
+DEBUG:MySQLPersistenceWrapper:2025-10-04 12:00:16,847:DB Connection Config Dict: {'database': 'employee_training', 'user': 'employee_training_user', 'host': 'localhost', 'port': 8889}
+DEBUG:MySQLPersistenceWrapper:2025-10-04 12:00:16,848:Creating connection pool...
+ERROR:MySQLPersistenceWrapper:2025-10-04 12:00:16,848:Problem creating connection pool: 'db_pool'
+ERROR:MySQLPersistenceWrapper:2025-10-04 12:00:16,850:Problem with select_all_employees(): 'NoneType' object has no attribute 'get_connection'
+DEBUG:MySQLPersistenceWrapper:2025-10-04 12:02:09,007:DB Connection Config Dict: {'database': 'employee_training', 'user': 'employee_training_user', 'host': 'localhost', 'port': 8889}
+DEBUG:MySQLPersistenceWrapper:2025-10-04 12:02:09,008:Creating connection pool...
+DEBUG:MySQLPersistenceWrapper:2025-10-04 12:02:09,460:Connection pool successfully created!
+DEBUG:MySQLPersistenceWrapper:2025-10-04 12:08:24,997:DB Connection Config Dict: {'database': 'employee_training', 'user': 'employee_training_user', 'host': 'localhost', 'port': 8889}
+DEBUG:MySQLPersistenceWrapper:2025-10-04 12:08:24,997:Creating connection pool...
+DEBUG:MySQLPersistenceWrapper:2025-10-04 12:08:25,442:Connection pool successfully created!
+DEBUG:MySQLPersistenceWrapper:2025-10-04 15:10:48,333:DB Connection Config Dict: {'database': 'employee_training_x', 'user': 'employee_training_user', 'host': 'localhost', 'port': 8889}
+DEBUG:MySQLPersistenceWrapper:2025-10-04 15:10:48,334:Creating connection pool...
+ERROR:MySQLPersistenceWrapper:2025-10-04 15:10:48,423:Problem creating connection pool: 1049 (42000): Unknown database 'employee_training_x'
+DEBUG:MySQLPersistenceWrapper:2025-10-04 15:11:39,755:DB Connection Config Dict: {'database': 'employee_training_x', 'user': 'employee_training_user', 'host': 'localhost', 'port': 8889}
+DEBUG:MySQLPersistenceWrapper:2025-10-04 15:11:39,755:Creating connection pool...
+ERROR:MySQLPersistenceWrapper:2025-10-04 15:11:39,793:Problem creating connection pool: 1049 (42000): Unknown database 'employee_training_x'
+ERROR:MySQLPersistenceWrapper:2025-10-04 15:11:39,793:Check Connection Settings:
+{"pool": {"name": "emp_training_app_db_bool", "size": 10, "reset_session": true}, "connection": {"config": {"database": "employee_training_x", "user": "employee_training_user", "host": "localhost", "port": 8889}}}
+ERROR:MySQLPersistenceWrapper:2025-10-04 15:11:39,795:Problem with select_all_employees(): 'NoneType' object has no attribute 'get_connection'
+DEBUG:MySQLPersistenceWrapper:2025-10-04 15:12:13,566:DB Connection Config Dict: {'database': 'employee_training', 'user': 'employee_training_user', 'host': 'localhost', 'port': 8889}
+DEBUG:MySQLPersistenceWrapper:2025-10-04 15:12:13,566:Creating connection pool...
+DEBUG:MySQLPersistenceWrapper:2025-10-04 15:12:13,969:Connection pool successfully created!
+DEBUG:MySQLPersistenceWrapper:2025-10-04 15:14:01,665:DB Connection Config Dict: {'database': 'employee_training', 'user': 'employee_training_user', 'host': 'localhost', 'port': 8889}
+DEBUG:MySQLPersistenceWrapper:2025-10-04 15:14:01,665:Creating connection pool...
+DEBUG:MySQLPersistenceWrapper:2025-10-04 15:14:02,094:Connection pool successfully created!
+DEBUG:MySQLPersistenceWrapper:2025-10-04 15:24:34,361:DB Connection Config Dict: {'database': 'employee_training', 'user': 'employee_training_user', 'host': 'localhost', 'port': 8889}
+DEBUG:MySQLPersistenceWrapper:2025-10-04 15:24:34,362:Creating connection pool...
+DEBUG:MySQLPersistenceWrapper:2025-10-04 15:24:34,848:Connection pool successfully created!
+DEBUG:MySQLPersistenceWrapper:2025-10-04 15:27:38,965:DB Connection Config Dict: {'database': 'employee_training', 'user': 'employee_training_user', 'host': 'localhost', 'port': 8889}
+DEBUG:MySQLPersistenceWrapper:2025-10-04 15:27:38,965:Creating connection pool...
+DEBUG:MySQLPersistenceWrapper:2025-10-04 15:27:39,342:Connection pool successfully created!

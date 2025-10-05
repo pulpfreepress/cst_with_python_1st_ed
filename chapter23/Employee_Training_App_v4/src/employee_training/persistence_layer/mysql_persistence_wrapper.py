@@ -1,11 +1,8 @@
 """Defines the MySQLPersistenceWrapper class."""
 
 from employee_training.application_base import ApplicationBase
-from mysql import connector
 from mysql.connector.pooling import (MySQLConnectionPool)
 import json
-import inspect
-
 
 class MySQLPersistenceWrapper(ApplicationBase):
 	"""Implements the MySQLPersistenceWrapper class."""
@@ -37,17 +34,6 @@ class MySQLPersistenceWrapper(ApplicationBase):
 			f"SELECT id, first_name, middle_name, last_name, birthday, gender " \
 			f"FROM employees"
 		
-		self.SELECT_ALL_EMPLOYEES_WITH_TRAINING = \
-			f"SELECT `employees`.id, first_name, last_name, title, description, " \
-					f"start_date, end_date, status " \
-			f"FROM employees, courses, employee_training_xref " \
-			f"WHERE (`employees`.id = employee_id) AND (`courses`.id = course_id)"
-		
-		self.SELECT_TRAINING_FOR_EMPLOYEE_ID = \
-			f"SELECT title, description, start_date, end_date, status " \
-			f"FROM courses, employee_training_xref " \
-			f"WHERE (employee_id = %s) AND (`courses`.id = course_id)"
-		
 
 	def select_all_employees(self)->list:
 		"""Returns a list of all employee rows."""
@@ -64,44 +50,7 @@ class MySQLPersistenceWrapper(ApplicationBase):
 			return results
 
 		except Exception as e:
-			self._logger.log_error(f'{inspect.currentframe().f_code.co_name}: {e}')
-
-	
-	def select_all_employees_with_training(self)->list:
-		"""Returns a list of all employee rows."""
-		cursor = None
-		results = None
-		try:
-			connection = self._connection_pool.get_connection()
-			with connection:
-				cursor = connection.cursor()
-				with cursor:
-					cursor.execute(self.SELECT_ALL_EMPLOYEES_WITH_TRAINING)
-					results = cursor.fetchall()
-
-			return results
-
-		except Exception as e:
-			self._logger.log_error(f'{inspect.currentframe().f_code.co_name}: {e}')
-
-
-	def select_all_training_for_employee_id(self, employee_id:int)->list:
-		"""Returns a list of all employee rows."""
-		cursor = None
-		results = None
-		try:
-			connection = self._connection_pool.get_connection()
-			with connection:
-				cursor = connection.cursor()
-				with cursor:
-					cursor.execute(self.SELECT_TRAINING_FOR_EMPLOYEE_ID, 
-								([employee_id]))
-					results = cursor.fetchall()
-
-			return results
-
-		except Exception as e:
-			self._logger.log_error(f'{inspect.currentframe().f_code.co_name}: {e}')
+			self._logger.log_error(f'Problem with select_all_employees(): {e}')
 
 
 	##### Private Utility Methods #####
@@ -124,4 +73,4 @@ class MySQLPersistenceWrapper(ApplicationBase):
 			self._logger.log_error(f'Problem creating connection pool: {e}')
 			self._logger.log_error(f'Check DB conf:\n{json.dumps(self.DATABASE)}')
 
-	
+

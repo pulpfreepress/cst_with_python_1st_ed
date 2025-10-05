@@ -20,23 +20,6 @@ def main():
 		for employee in employees_list:
 			print(f'{employee}')
 
-		print('*' * 40)
-
-		employees_list = db.select_all_employees_with_training()
-		for employee in employees_list:
-			print(f'{employee}')
-
-		print('*' * 40)
-		employees_list = db.select_all_employees()
-		for employee in employees_list:
-			print(f'{employee[1]} {employee[3]}')
-			training_list = db.select_all_training_for_employee_id(employee[0])
-			for training in training_list:
-				training_string = f'\t{training[0]} {training[1]} {training[2]} ' \
-					f'{training[3]} {training[4]}'
-				print(training_string)
-
-
 
 def configure_and_parse_commandline_arguments():
 	"""Configure and parse command-line arguments."""
