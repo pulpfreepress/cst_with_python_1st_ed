@@ -21,7 +21,6 @@ def main():
 			print(f'{employee}')
 
 		print('*' * 40)
-
 		employees_list = db.select_all_employees_with_training()
 		for employee in employees_list:
 			print(f'{employee}')
