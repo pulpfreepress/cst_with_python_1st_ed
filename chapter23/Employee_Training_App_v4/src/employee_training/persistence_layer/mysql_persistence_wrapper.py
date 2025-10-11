@@ -10,8 +10,8 @@ class MySQLPersistenceWrapper(ApplicationBase):
 	def __init__(self, config:dict)->None:
 		"""Initializes object. """
 		self._config_dict = config
-		self.META = dict(config["meta"])
-		self.DATABASE = dict(config["database"])
+		self.META = config["meta"]
+		self.DATABASE = config["database"]
 		super().__init__(subclass_name=self.__class__.__name__, 
 				   logfile_prefix_name=self.META["log_prefix"])
 		
