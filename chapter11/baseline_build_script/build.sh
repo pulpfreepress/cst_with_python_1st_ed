@@ -76,7 +76,7 @@ process_arguments() {
 			display_usage 
 			help
 			;;
-		--checktools) # Verfy required tools are installed
+		--checktools) # Verify required tools are installed
 			check_tools
 			;;
 		--runtests)  # Run all tests
