@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `courses` (
   `title` varchar(100) NOT NULL,
   `description` varchar(250) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Store course data.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Store course data.';
 
 --
 -- RELATIONSHIPS FOR TABLE `courses`:
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `employees` (
   `birthday` varchar(25) NOT NULL,
   `gender` char(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Store employee data.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Store employee data.';
 
 --
 -- RELATIONSHIPS FOR TABLE `employees`:
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `employee_training_xref` (
   `status` varchar(25) NOT NULL,
   KEY `course_id_fk_constraint` (`course_id`),
   KEY `employee_id` (`employee_id`,`course_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci COMMENT='Relates employess to courses taken.';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='Relates employess to courses taken.';
 
 --
 -- RELATIONSHIPS FOR TABLE `employee_training_xref`:

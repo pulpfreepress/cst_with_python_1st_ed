@@ -11,7 +11,7 @@ SET time_zone = "+00:00";
 -- Create Database: `employee_training`
 --
 CREATE DATABASE IF NOT EXISTS `employee_training` 
-    DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
+    DEFAULT CHARACTER SET utf8mb4;
 
 COMMIT;
 
