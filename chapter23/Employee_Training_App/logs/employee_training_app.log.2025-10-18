@@ -1,0 +1,3 @@
+DEBUG:MySQLPersistenceWrapper:2025-10-18 06:22:13,822:DB Connection Config Dict: {'database': 'employee_training', 'user': 'employee_training_user', 'host': 'localhost', 'port': 3306}
+DEBUG:MySQLPersistenceWrapper:2025-10-18 06:22:13,822:Creating connection pool...
+DEBUG:MySQLPersistenceWrapper:2025-10-18 06:22:14,133:Connection pool successfully created!

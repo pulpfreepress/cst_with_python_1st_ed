@@ -116,6 +116,7 @@ class MySQLPersistenceWrapper(ApplicationBase):
 				MySQLConnectionPool(pool_name = self.DATABASE["pool"]["name"],
 					pool_size=self.DATABASE["pool"]["size"],
 					pool_reset_session=self.DATABASE["pool"]["reset_session"],
+					use_pure=self.DATABASE["pool"]["use_pure"],
 					**config)
 			self._logger.log_debug(f'Connection pool successfully created!')
 			return cnx_pool
