@@ -16,7 +16,7 @@ def main():
 			config = json.loads(f.read())
 			
 		service_layer = AppServices(config)
-		employees_list = service_layer.get_all_employees_as_json()
+		employees_list = service_layer.get_all_employees()
 		print(employees_list)
 
 

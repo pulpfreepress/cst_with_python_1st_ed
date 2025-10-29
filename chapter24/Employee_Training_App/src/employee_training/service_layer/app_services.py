@@ -19,12 +19,15 @@ class AppServices(ApplicationBase):
         
 
 
-    def get_all_employees_as_json(self)->str:
-        """Returns all employees as JSON string"""
+    def get_all_employees(self)->List:
+        """Returns a list of employee objects."""
         self._logger.log_debug(f'In {inspect.currentframe().f_code.co_name}()...')
+        employee_dict = {}
+        employee_dict['employees'] = []
+
         try:
             results = self.DB.select_all_employees()
             return results
-
+            
         except Exception as e:
             self._logger.log_error(f'{inspect.currentframe().f_code.co_name}:{e}')
