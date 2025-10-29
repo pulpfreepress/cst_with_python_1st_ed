@@ -5,10 +5,6 @@ from mysql import connector
 from mysql.connector.pooling import (MySQLConnectionPool)
 import json
 import inspect
-from typing import List
-from employee_training.infrastructure_layer.employee import Employee
-from employee_training.infrastructure_layer.training import Training
-from enum import Enum
 
 
 class MySQLPersistenceWrapper(ApplicationBase):
@@ -38,14 +34,6 @@ class MySQLPersistenceWrapper(ApplicationBase):
 		self._connection_pool = \
 			self._initialize_database_connection_pool(self.DB_CONFIG)
 
-		self.EmployeeColumns = \
-			Enum('EmployeeColumns', [('id', 0), ('first_name', 1), ('middle_name', 2), \
-					('last_name', 3), ('birthday', 4), ('gender', 5)])
-		
-		self.TrainingColumns = \
-			Enum('TrainingColumns', [('title', 0), ('description', 1), \
-					('start_date', 2), ('end_date', 3), ('status', 4)])
-
 		# SQL Query Consants
 		self.SELECT_ALL_EMPLOYEES = \
 			f"SELECT id, first_name, middle_name, last_name, birthday, gender " \
@@ -64,10 +52,9 @@ class MySQLPersistenceWrapper(ApplicationBase):
 		
 
 	def select_all_employees(self)->list:
-		"""Returns a list of employee objects."""
+		"""Returns a list of all employee rows."""
 		cursor = None
 		results = None
-		employee_list = []
 		try:
 			connection = self._connection_pool.get_connection()
 			with connection:
@@ -75,22 +62,15 @@ class MySQLPersistenceWrapper(ApplicationBase):
 				with cursor:
 					cursor.execute(self.SELECT_ALL_EMPLOYEES)
 					results = cursor.fetchall()
-					employee_list = self._populate_employee_objects(results)
 
-			for employee in employee_list:
-				training_list = self.select_all_training_for_employee_id(employee.id)
-				self._logger.log_debug(f'{inspect.currentframe().f_code.co_name}: {training_list}')
-				employee.training = self._populate_training_objects(training_list)
-
-
-			return employee_list
+			return results
 
 		except Exception as e:
 			self._logger.log_error(f'{inspect.currentframe().f_code.co_name}: {e}')
 
 	
 	def select_all_employees_with_training(self)->list:
-		"""Returns a flattened list of employees and their training."""
+		"""Returns a list of all employee rows."""
 		cursor = None
 		results = None
 		try:
@@ -108,7 +88,7 @@ class MySQLPersistenceWrapper(ApplicationBase):
 
 
 	def select_all_training_for_employee_id(self, employee_id:int)->list:
-		"""Returns a list of all training for employee id."""
+		"""Returns a list of all employee rows."""
 		cursor = None
 		results = None
 		try:
@@ -148,38 +128,3 @@ class MySQLPersistenceWrapper(ApplicationBase):
 			self._logger.log_error(f'Check DB conf:\n{json.dumps(self.DATABASE)}')
 
 	
-	def _populate_employee_objects(self, results:List)->List:
-		"""Populates and returns a list of Employee objects."""
-		employee_list = []
-		try:
-			for row in results:
-				employee = Employee()
-				employee.id = row[self.EmployeeColumns['id'].value]
-				employee.first_name = row[self.EmployeeColumns['first_name'].value]
-				employee.middle_name = row[self.EmployeeColumns['middle_name'].value]
-				employee.last_name = row[self.EmployeeColumns['last_name'].value]
-				employee.birthday = row[self.EmployeeColumns['birthday'].value]
-				employee.gender = row[self.EmployeeColumns['gender'].value]
-				employee_list.append(employee)
-			
-			return employee_list
-		except Exception as e:
-			self._logger.log_error(f'{inspect.currentframe().f_code.co_name}: {e}')
-
-
-	def _populate_training_objects(self, results:List)->List:
-		"""Populates and returns a list of Training objects."""
-		training_list = []
-		try:
-			for row in results:
-				training = Training()
-				training.title = row[self.TrainingColumns['title'].value]
-				training.description = row[self.TrainingColumns['description'].value]
-				training.start_date = row[self.TrainingColumns['start_date'].value]
-				training.end_date = row[self.TrainingColumns['end_date'].value]
-				training.status = row[self.TrainingColumns['status'].value]
-				training_list.append(training)
-				
-			return training_list
-		except Exception as e:
-			self._logger.log_error(f'{inspect.currentframe().f_code.co_name}: {e}')

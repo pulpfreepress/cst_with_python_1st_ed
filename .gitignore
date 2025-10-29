@@ -3,6 +3,7 @@
 ._.DS_Store
 .venv
 Pipfile.lock
+logs/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

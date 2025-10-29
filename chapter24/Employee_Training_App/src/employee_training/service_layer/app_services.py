@@ -24,7 +24,7 @@ class AppServices(ApplicationBase):
         self._logger.log_debug(f'In {inspect.currentframe().f_code.co_name}()...')
         try:
             results = self.DB.select_all_employees()
-            return json.dumps(results)
+            return results
 
         except Exception as e:
             self._logger.log_error(f'{inspect.currentframe().f_code.co_name}:{e}')
