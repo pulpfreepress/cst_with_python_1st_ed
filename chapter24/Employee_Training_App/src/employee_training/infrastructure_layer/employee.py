@@ -2,17 +2,18 @@
 
 import json
 from datetime import date
+from training import Training
 from typing import List
 
 class Employee():
     """Implements an Employee entity."""
     def __init__(self)->None:
         self.id:int = 0
-        self.first_name:str = None
-        self.middle_name:str = None
-        self.last_name:str = None
-        self.birthday:date = None
-        self.gender:str = None
+        self.first_name:str = ""
+        self.middle_name:str = ""
+        self.last_name:str = ""
+        self.birthday:date = date.today()
+        self.gender:str = ""
         self.training:List = []
 
 

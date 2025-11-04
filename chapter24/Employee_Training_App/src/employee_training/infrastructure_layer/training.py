@@ -8,11 +8,11 @@ from datetime import date
 class Training():
     """Implements a Training entity."""
     def __init__(self)->None:
-        self.title:str = None
-        self.description:str = None
-        self.start_date:date = None
-        self.end_date:date = None
-        self.status:str = None
+        self.title:str = ""
+        self.description:str = ""
+        self.start_date:date = date.today()
+        self.end_date:date = date.today()
+        self.status:str = ""
 
 
     def __str__(self)->str:
