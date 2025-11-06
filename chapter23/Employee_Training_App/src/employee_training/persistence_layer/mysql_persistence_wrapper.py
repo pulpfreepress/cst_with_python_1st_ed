@@ -70,7 +70,7 @@ class MySQLPersistenceWrapper(ApplicationBase):
 
 	
 	def select_all_employees_with_training(self)->list:
-		"""Returns a list of all employee rows."""
+		"""Returns a list of all employee rows with training."""
 		cursor = None
 		results = None
 		try:
@@ -88,7 +88,7 @@ class MySQLPersistenceWrapper(ApplicationBase):
 
 
 	def select_all_training_for_employee_id(self, employee_id:int)->list:
-		"""Returns a list of all employee rows."""
+		"""Returns a list of all training rows for employee id."""
 		cursor = None
 		results = None
 		try:
