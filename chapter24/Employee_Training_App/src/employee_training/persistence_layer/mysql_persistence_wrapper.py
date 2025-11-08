@@ -9,7 +9,6 @@ from typing import List
 from employee_training.infrastructure_layer.employee import Employee
 from employee_training.infrastructure_layer.training import Training
 from enum import Enum
-from datetime import date, datetime
 
 
 class MySQLPersistenceWrapper(ApplicationBase):
@@ -116,8 +115,6 @@ class MySQLPersistenceWrapper(ApplicationBase):
 	def create_employee(self, employee:Employee)->Employee:
 		"""Create a new record in the employees table."""
 		cursor = None
-		results = None
-		
 		try:
 			connection = self._connection_pool.get_connection()
 			with connection:
@@ -137,7 +134,6 @@ class MySQLPersistenceWrapper(ApplicationBase):
 			self._logger.log_error(f'{inspect.currentframe().f_code.co_name}: {e}')
 
 			
-
 
 	##### Private Utility Methods #####
 

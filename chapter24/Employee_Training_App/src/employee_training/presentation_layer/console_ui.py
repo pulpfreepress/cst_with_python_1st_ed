@@ -1,5 +1,6 @@
 """Contains the definition for a ConsoleUI class."""
 
+
 from employee_training.service_layer.app_services import AppServices
 from employee_training.application_base import ApplicationBase
 from employee_training.infrastructure_layer.employee import Employee
@@ -68,8 +69,8 @@ class ConsoleUI(ApplicationBase):
               training_table.clear_rows()
          print(employee_table)
 
-         self._logger.log_debug(f'{inspect.currentframe().f_code.co_name}: {employees}')
-
+         self._logger.log_debug(f'{inspect.currentframe().f_code.co_name}: ' \
+                                f'{employees}')
 
     def list_courses(self)->None:
          """List courses."""
@@ -90,7 +91,8 @@ class ConsoleUI(ApplicationBase):
             print(f'New employee id: {employee.id}')
 
          except Exception as e:
-            self._logger.log_error(f'{inspect.currentframe().f_code.co_name}: {e}')
+            self._logger.log_error(f'{inspect.currentframe().f_code.co_name}: ' \
+                                f'{e}')
 
 
     def record_employee_training(self)->None:
