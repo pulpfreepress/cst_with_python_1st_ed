@@ -9,6 +9,7 @@ from typing import List
 from employee_training.infrastructure_layer.employee import Employee
 from employee_training.infrastructure_layer.training import Training
 from enum import Enum
+from datetime import date, datetime
 
 
 class MySQLPersistenceWrapper(ApplicationBase):
@@ -59,6 +60,11 @@ class MySQLPersistenceWrapper(ApplicationBase):
 			f"FROM courses, employee_training_xref " \
 			f"WHERE (employee_id = %s) AND (`courses`.id = course_id)"
 		
+		self.INSERT_EMPLOYEE = \
+			f"INSERT INTO employees " \
+			f"(first_name, middle_name, last_name, gender, birthday) " \
+			f"values(%s, %s, %s, %s, %s)"
+		
 
 	def select_all_employees(self)->List[Employee]:
 		"""Returns a list of employee objects."""
@@ -105,6 +111,32 @@ class MySQLPersistenceWrapper(ApplicationBase):
 
 		except Exception as e:
 			self._logger.log_error(f'{inspect.currentframe().f_code.co_name}: {e}')
+
+
+	def create_employee(self, employee:Employee)->Employee:
+		"""Create a new record in the employees table."""
+		cursor = None
+		results = None
+		
+		try:
+			connection = self._connection_pool.get_connection()
+			with connection:
+				cursor = connection.cursor()
+				with cursor:
+					cursor.execute(self.INSERT_EMPLOYEE, 
+						([employee.first_name, employee.middle_name,
+		  				employee.last_name, employee.gender, employee.birthday]))
+					connection.commit()
+					self._logger.log_debug(f'Updated {cursor.rowcount} row.')
+					self._logger.log_debug(f'Last Row ID: {cursor.lastrowid}.')
+					employee.id = cursor.lastrowid
+
+			return employee
+
+		except Exception as e:
+			self._logger.log_error(f'{inspect.currentframe().f_code.co_name}: {e}')
+
+			
 
 
 	##### Private Utility Methods #####

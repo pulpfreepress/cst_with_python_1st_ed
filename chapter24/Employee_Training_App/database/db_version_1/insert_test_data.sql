@@ -25,12 +25,17 @@ SET @bash_course_id = LAST_INSERT_ID();
 INSERT INTO `courses` (title, description) 
 		values ('Intro to C Programming', 
 				'Introduces student to C programming language fundamentals.');
+set @c_course_id = LAST_INSERT_ID();
+
 INSERT INTO `courses` (title, description) 
 		values ('Managing Difficult Employees', 
 				'How to lead through kindness.');
+set @managing_difficult_employees_course_id = LAST_INSERT_ID();
+
 INSERT INTO `courses` (title, description) 
 		values ('Database Programming with Python', 
 				'How to develop data-driven apps with Python.');
+set @database_programming_with_python_course_id = LAST_INSERT_ID();
 
 
 -- Insert data into the employee_training_xref table.
@@ -38,8 +43,25 @@ INSERT INTO `employee_training_xref` (employee_id, course_id, start_date,
 									end_date, status) 
 		VALUES(@rick_id, @bash_course_id, '2025-09-15 00:00:00', 
 			'2025-09-20 00:00:00', 'Pass');
+
 INSERT INTO `employee_training_xref` (employee_id, course_id, start_date, 
 									end_date, status) 
 		VALUES(@jose_id, @bash_course_id, '2025-09-15 00:00:00', 
 			'2025-09-20 00:00:00', 'Pass');
+
+INSERT INTO `employee_training_xref` (employee_id, course_id, start_date, 
+									end_date, status) 
+		VALUES(@rick_id, @c_course_id, '2025-11-03 00:00:00', 
+			'2025-11-07 00:00:00', 'Pass');
+
+INSERT INTO `employee_training_xref` (employee_id, course_id, start_date, 
+									end_date, status) 
+		VALUES(@rick_id, @database_programming_with_python_course_id, '2024-01-08 00:00:00', 
+			'2024-01-12 00:00:00', 'Pass');
+
+INSERT INTO `employee_training_xref` (employee_id, course_id, start_date, 
+									end_date, status) 
+		VALUES(@jose_id, @c_course_id, '2025-07-07 00:00:00', 
+			'2025-07-11 00:00:00', 'Pass');
+
 

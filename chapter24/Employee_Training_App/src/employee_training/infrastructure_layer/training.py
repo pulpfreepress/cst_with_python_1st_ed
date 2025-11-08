@@ -8,8 +8,8 @@ class Training():
     def __init__(self)->None:
         self.title:str = ""
         self.description:str = ""
-        self.start_date:date = date.today()
-        self.end_date:date = date.today()
+        self.start_date:str = ""
+        self.end_date:str = ""
         self.status:str = ""
 
 

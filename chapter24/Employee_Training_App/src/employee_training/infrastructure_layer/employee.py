@@ -1,7 +1,6 @@
 """Contains the definition for the Employee class."""
-
-import json
 from datetime import date
+import json
 from employee_training.infrastructure_layer.training import Training
 from typing import List
 
@@ -12,7 +11,7 @@ class Employee():
         self.first_name:str = ""
         self.middle_name:str = ""
         self.last_name:str = ""
-        self.birthday:date = date.today()
+        self.birthday:str = ""
         self.gender:str = ""
         self.training:List[Training] = []
 

@@ -2,8 +2,8 @@
 
 import json
 from argparse import ArgumentParser
-from employee_training.service_layer.app_services \
-	import AppServices
+from employee_training.presentation_layer.console_ui \
+	import ConsoleUI
 
 
 def main():
@@ -15,10 +15,8 @@ def main():
 		with open(args.configfile, 'r') as f:
 			config = json.loads(f.read())
 			
-		service_layer = AppServices(config)
-		employees_list = service_layer.get_all_employees()
-		print(employees_list)
-
+		ui = ConsoleUI(config)
+		ui.start()
 
 
 def configure_and_parse_commandline_arguments():
@@ -33,7 +31,6 @@ def configure_and_parse_commandline_arguments():
 					required=True)
 	args = parser.parse_args()
 	return args
-
 
 
 if __name__ == "__main__":

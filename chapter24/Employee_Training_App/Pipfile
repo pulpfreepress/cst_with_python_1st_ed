@@ -5,6 +5,7 @@ name = "pypi"
 
 [packages]
 mysql-connector-python = "9.5.0"
+prettytable = "*"
 
 [dev-packages]
 
