@@ -25,9 +25,4 @@ echo $d': Inserting test data...' | tee -a logs/insert_test_data.log
 mysql < db_version_1/insert_test_data.sql 2>&1 | tee -a logs/insert_test_data.log
 
 
-# Create Database Version 2
-echo "Running DB Version 2 Scripts..."
-echo $d': Altering employees table...' | tee -a logs/alter_employees_table.log
-mysql < db_version_2/alter_employees_table.sql 2>&1 | 
-        tee -a logs/alter_employees_table.log
 
