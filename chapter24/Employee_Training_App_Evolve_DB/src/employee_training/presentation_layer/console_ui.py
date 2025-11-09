@@ -4,7 +4,7 @@
 from employee_training.service_layer.app_services import AppServices
 from employee_training.application_base import ApplicationBase
 from employee_training.infrastructure_layer.employee import Employee
-from prettytable.colortable import ColorTable, Themes
+from prettytable import PrettyTable
 from datetime import datetime
 import sys
 import inspect
@@ -51,10 +51,10 @@ class ConsoleUI(ApplicationBase):
     def list_employees(self)->None:
          """List employees."""
          employees = self.app_services.get_all_employees()
-         employee_table = ColorTable(theme=Themes.OCEAN)
+         employee_table = PrettyTable()
          employee_table.field_names = ['id', 'First Name', 'Middle Name', 
                                        'Last Name', 'Gender', 'Birthday', 'Training']
-         training_table = ColorTable(theme=Themes.OCEAN)
+         training_table = PrettyTable()
          training_table.field_names = ['Title', 'Status']
          training_table.align = 'l'
          for employee in employees:
