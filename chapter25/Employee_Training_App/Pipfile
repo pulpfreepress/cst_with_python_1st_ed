@@ -6,9 +6,11 @@ name = "pypi"
 [packages]
 mysql-connector-python = "9.5.0"
 prettytable = "*"
+pydocstyle = "*"
 
 [dev-packages]
 pytest = "*"
+pytest-cov = "*"
 
 [requires]
 python_version = "3.12"
