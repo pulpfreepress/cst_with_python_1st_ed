@@ -13,6 +13,7 @@ declare -r PROJECT_PACKAGE_NAME="employee_training"
 mkdir -p $LOGS_DIR
 mkdir -p $DOCS_DIR
 
+
 # TOOLS: A list of required tools. Edit as required. 
 declare -r TOOLS="git python3 pipenv"
 
