@@ -10,8 +10,9 @@ from robotrat_app import RobotRatApp
 import argparse
 
 def main():
-    parser = argparse.ArgumentParser(description='Set floor dimensions \
-from command-line.')
+    parser = argparse.ArgumentParser(
+        description='Set floor dimensions from command-line.'
+        )
     parser.add_argument('rows', metavar='N', type=int, help='Number of rows')
     parser.add_argument('cols', metavar='N', type=int, help='Number of columns')
     args = parser.parse_args()

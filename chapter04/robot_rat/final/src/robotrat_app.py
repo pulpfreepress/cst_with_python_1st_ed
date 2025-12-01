@@ -184,7 +184,8 @@ class RobotRatApp():
 								break
 							spaces_to_move -= 1
 					case self.Directions.EAST:
-						while (self._current_col < self._cols) and (spaces_to_move > 0):
+						while (self._current_col < self._cols) \
+							and (spaces_to_move > 0):
 							self._floor[self._current_row][self._current_col] = True
 							if self._current_col < (self._cols - 1):
 								self._current_col += 1
@@ -192,7 +193,8 @@ class RobotRatApp():
 								break
 							spaces_to_move -= 1
 					case self.Directions.SOUTH:
-						while (self._current_row < self._rows) and (spaces_to_move > 0):
+						while (self._current_row < self._rows) \
+							and (spaces_to_move > 0):
 							self._floor[self._current_row][self._current_col] = True
 							if self._current_row < (self._rows - 1):
 								self._current_row += 1
@@ -228,8 +230,8 @@ class RobotRatApp():
 
 	def print_status(self):
 		"""Displays Robot Rat current position, direction, and pen position."""
-		print(f'\n\tRobot Rat at [{self._current_row}][{self._current_col}] \
-facing {self._direction} {self._pen_position}')
+		print(f'\n\tRobot Rat at [{self._current_row}][{self._current_col}] ' \
+				f'facing {self._direction} {self._pen_position}')
 
 	def print_error_message(self, menu_choice):
 		"""Warns of an invalid command entry."""

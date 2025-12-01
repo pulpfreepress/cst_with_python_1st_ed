@@ -96,16 +96,16 @@ def main():
 		print(unsorted_ints)
 		input('Press any key to continue...')
 	
-	print(f'Merge sorting {len(unsorted_ints):,} random integers. \
-Hold my beer...this won\'t take long.')
+	print(f'Merge sorting {len(unsorted_ints):,} random integers. ' \
+	f'Hold my beer...this won\'t take long.')
 	t_start = time.perf_counter()
 	sorted_ints = ms.split(unsorted_ints, 0, len(unsorted_ints)-1)
 	t_stop = time.perf_counter()
 	sort_time = t_stop - t_start
 	if __debug__:
 		print(sorted_ints)
-	print(f'Sort time for {len(unsorted_ints):,} integers: \
-{sort_time:0.8f} seconds.')
+	print(f'Sort time for {len(unsorted_ints):,} integers: ' \
+	f'{sort_time:0.8f} seconds.')
 
 
 if __name__ == '__main__':

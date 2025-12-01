@@ -52,8 +52,9 @@ def main():
 	print()
 
 	unsorted_ints = [random.randint(0, 10000) for _ in range(20000)]
-	print(f'Dumb sorting {len(unsorted_ints):,} \
-randomly-generated integers. This may take a while. Know any good jokes?')
+	print(f'Dumb sorting {len(unsorted_ints):,} ' \
+	f'randomly-generated integers. ' \
+	f'This may take a while. Know any good jokes?') 
 	(sorted_list, outerloop, innerloop, swaps, sort_time) = ds.run(unsorted_ints)
 	print(f'Outerloop: {outerloop:,}')
 	print(f'Innerloop: {innerloop:,}')
