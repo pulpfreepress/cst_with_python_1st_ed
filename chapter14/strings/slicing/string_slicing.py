@@ -24,6 +24,7 @@ def main():
 	newline = '\n'
 	# Print first line
 	print(f'Print first line:\n {s[:s.find(newline)]}')
+	
 
 if __name__ == '__main__':
 	main()
