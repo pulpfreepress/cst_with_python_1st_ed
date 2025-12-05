@@ -110,8 +110,8 @@ def main():
 
 			print('*' * 130)
 			# Print column headers
-			print(f'{"No.":<8}{"Raw Bytes":<10}{"Tag Hex":<10}\
-{"Tag Name":30}{"Tag Type":<20} {"Length":<8}{"Data/Offset":<15}{"Data":<50}')
+			print(f'{"No.":<8}{"Raw Bytes":<10}{"Tag Hex":<10}{"Tag Name":30} ' \
+			f'{"Tag Type":<20} {"Length":<8}{"Data/Offset":<15}{"Data":<50}')
 			print('-' * 130)
 
 			# Read Tag Records
@@ -160,9 +160,9 @@ def main():
 						case _: pass
 
 				# Print EXIF data
-				print(f'{i: <8d}{f"{tag[0]:02x}{tag[1]:02x}":10}\
-{tag_hex: <10}{tags.get(tag_hex):30}{tag_types.get(tag_type):<20}\
-{data_length:<8d}{data_or_offset:<15}{data}')
+				print(f'{i: <8d}{f"{tag[0]:02x}{tag[1]:02x}":10}{tag_hex: <10}' \
+				f'{tags.get(tag_hex):30}{tag_types.get(tag_type):<20}' \
+				f'{data_length:<8d}{data_or_offset:<15}{data}')
 		
 			
 
